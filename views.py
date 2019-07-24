@@ -147,6 +147,36 @@ def article(request, article_id):
 
 
 @editor_user_required
+def delete_author(request, article_id, author_id):
+    """Allows submitting author to delete an author object."""
+    article = get_object_or_404(
+        models.Article,
+        pk=article_id,
+        journal=request.journal
+    )
+    author = get_object_or_404(
+        core_models.Account,
+        pk=author_id
+    )
+
+    article.authors.remove(author)
+
+    if article.correspondence_author == author:
+        article.correspondence_author = None
+        article.save()
+
+    try:
+        ordering = models.ArticleAuthorOrder.objects.get(
+            article=article,
+            author=author,
+        ).delete()
+    except models.ArticleAuthorOrder.DoesNotExist:
+        pass
+
+    return redirect(reverse('bc_article', kwargs={'article_id': article_id}))
+
+
+@editor_user_required
 def xml_import_upload(request):
     if request.POST and request.FILES:
         xml_file = request.FILES.get('xml_file')
