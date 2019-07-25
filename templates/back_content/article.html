@@ -155,7 +155,7 @@
                                             class="fa fa-search" aria-hidden="true">&nbsp;</i>Preview</a>
                                     </small>{% endif %}</td>
                                 <td>Galley</td>
-                                <td><a href="{% url 'pm_edit_galley' article.pk galley.pk %}" class="fa fa-edit"></a>
+                                <td><a href="{% url 'pm_edit_galley' article.pk galley.pk %}?return={{ request.path|urlencode }}" class="fa fa-edit"></a>
                                 </td>
                                 <td>{% if can_view_file_flag %}
                                     <a href="{% url 'article_file_download' 'id' article.pk galley.file.pk %}"><i
