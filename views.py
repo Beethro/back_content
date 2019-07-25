@@ -39,7 +39,7 @@ def index(request):
 def article(request, article_id):
     article = get_object_or_404(models.Article, pk=article_id, journal=request.journal)
     article_form = forms.ArticleInfo(instance=article)
-    author_form = forms.AuthorForm()
+    author_form = bc_forms.BackContentAuthorForm()
     pub_form = bc_forms.PublicationInfo(instance=article)
     remote_form = bc_forms.RemoteArticle(instance=article)
     modal = None
@@ -94,7 +94,7 @@ def article(request, article_id):
                 prod_logic.save_galley(article, request, uploaded_file, True, "Other", True)
 
         if 'add_author' in request.POST:
-            author_form = forms.AuthorForm(request.POST)
+            author_form = bc_forms.BackContentAuthorForm(request.POST)
             modal = 'author'
 
             author_exists = logic.check_author_exists(request.POST.get('email'))
@@ -104,15 +104,18 @@ def article(request, article_id):
                 return redirect(reverse('bc_article', kwargs={'article_id': article_id}))
             else:
                 if author_form.is_valid():
-                    new_author = author_form.save(commit=False)
-                    new_author.username = new_author.email
-                    new_author.set_password(shared.generate_password())
-                    new_author.save()
-                    new_author.add_account_role(role_slug='author', journal=request.journal)
-                    article.authors.add(new_author)
-                    messages.add_message(request, messages.SUCCESS, '%s added to the article' % new_author.full_name())
+                    if author_form.cleaned_data["first_name"] and author_form.cleaned_data["last_name"] and author_form.cleaned_data["institution"]:
+                        new_author = author_form.save(commit=False)
+                        new_author.username = new_author.email
+                        new_author.set_password(shared.generate_password())
+                        new_author.save()
+                        new_author.add_account_role(role_slug='author', journal=request.journal)
+                        article.authors.add(new_author)
+                        messages.add_message(request, messages.SUCCESS, '%s added to the article' % new_author.full_name())
 
-                    return redirect(reverse('bc_article', kwargs={'article_id': article_id}))
+                        return redirect(reverse('bc_article', kwargs={'article_id': article_id}))
+                    else:
+                        messages.add_message(request, messages.ERROR, '%s could not be found. Enter Firstname, Lastname and Institution' % request.POST.get('email'))
 
         if 'publish' in request.POST:
             if not article.stage == models.STAGE_PUBLISHED:

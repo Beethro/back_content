@@ -1,6 +1,7 @@
 from django import forms
 
 from submission import models
+from core import models as core_models
 
 
 class PublicationInfo(forms.ModelForm):
@@ -27,3 +28,49 @@ class RemoteArticle(forms.ModelForm):
 class RemoteParse(forms.Form):
     url = forms.CharField(required=True, label="Enter a URL or a DOI.")
     mode = forms.ChoiceField(required=True, choices=(('url', 'URL'), ('doi', 'DOI')))
+
+
+class BackContentAuthorForm(forms.ModelForm):
+
+    class Meta:
+        model = core_models.Account
+        exclude = (
+            'date_joined',
+            'activation_code'
+            'date_confirmed'
+            'confirmation_code'
+            'reset_code'
+            'reset_code_validated'
+            'roles'
+            'interest'
+            'is_active'
+            'is_staff'
+            'is_admin'
+            'password',
+            'username',
+            'roles',
+
+        )
+
+        widgets = {
+            'first_name': forms.TextInput(attrs={'placeholder': 'First name'}),
+            'middle_name': forms.TextInput(attrs={'placeholder': 'Middle name'}),
+            'last_name': forms.TextInput(attrs={'placeholder': 'Last name'}),
+            'biography': forms.Textarea(
+                attrs={'placeholder': 'Enter biography here'}),
+            'institution': forms.TextInput(attrs={'placeholder': 'Institution'}),
+            'department': forms.TextInput(attrs={'placeholder': 'Department'}),
+            'twitter': forms.TextInput(attrs={'placeholder': 'Twitter handle'}),
+            'linkedin': forms.TextInput(attrs={'placeholder': 'LinkedIn profile'}),
+            'impactstory': forms.TextInput(attrs={'placeholder': 'ImpactStory profile'}),
+            'orcid': forms.TextInput(attrs={'placeholder': 'ORCID ID'}),
+            'email': forms.TextInput(attrs={'placeholder': 'Email address'}),
+
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(BackContentAuthorForm, self).__init__(*args, **kwargs)
+        self.fields['password'].required = False
+        self.fields['first_name'].required = False
+        self.fields['last_name'].required = False
+        self.fields['institution'].required = False
