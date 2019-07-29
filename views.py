@@ -83,11 +83,17 @@ def article(request, article_id):
 
         if 'xml' in request.POST:
             for uploaded_file in request.FILES.getlist('xml-file'):
-                prod_logic.save_galley(article, request, uploaded_file, True, "XML", False)
+                if not files.check_in_memory_mime_with_types(in_memory_file=uploaded_file, mime_types=files.MIMETYPES_WITH_FIGURES):
+                    messages.add_message(request, messages.WARNING, 'File is not XML/HTML!')
+                else:
+                    prod_logic.save_galley(article, request, uploaded_file, True, "XML", False)
 
         if 'pdf' in request.POST:
             for uploaded_file in request.FILES.getlist('pdf-file'):
-                prod_logic.save_galley(article, request, uploaded_file, True, "PDF", False)
+                if not files.check_in_memory_mime_with_types(in_memory_file=uploaded_file, mime_types=files.PDF_MIMETYPES):
+                    messages.add_message(request, messages.WARNING, 'File is not PDF!')
+                else:
+                    prod_logic.save_galley(article, request, uploaded_file, True, "PDF", False)
 
         if 'other' in request.POST:
             for uploaded_file in request.FILES.getlist('other-file'):
