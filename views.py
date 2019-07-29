@@ -38,6 +38,11 @@ def index(request):
 @editor_user_required
 def article(request, article_id):
     article = get_object_or_404(models.Article, pk=article_id, journal=request.journal)
+
+    if not article.license:
+        default_configuration = request.journal.submissionconfiguration
+        article.license = default_configuration.default_license
+
     article_form = forms.ArticleInfo(instance=article)
     author_form = bc_forms.BackContentAuthorForm()
     pub_form = bc_forms.PublicationInfo(instance=article)
