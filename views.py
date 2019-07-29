@@ -141,6 +141,12 @@ def article(request, article_id):
             else:
                 return redirect(reverse('bc_index'))
 
+        if 'draft' in request.POST:
+            return redirect(reverse('bc_index'))
+
+        if 'delete' in request.POST:
+            return redirect(reverse('bc_delete_article', kwargs={'article_id': article_id}))
+
     template = 'back_content/article.html'
     context = {
         'article': article,
@@ -154,6 +160,12 @@ def article(request, article_id):
 
     return render(request, template, context)
 
+@editor_user_required
+def delete_article(request, article_id):
+    article = get_object_or_404(models.Article, pk=article_id, journal=request.journal)
+    article.delete()
+    messages.add_message(request, messages.SUCCESS, '%s deleted', article_id)
+    return redirect(reverse('bc_index'))
 
 @editor_user_required
 def delete_author(request, article_id, author_id):

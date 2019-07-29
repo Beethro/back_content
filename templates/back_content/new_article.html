@@ -40,7 +40,7 @@
                             <th>Submitted</th>
                             <th>Main Author</th>
                             <th>Section</th>
-                            <th></th>
+                            <th>Actions</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -50,7 +50,12 @@
                                 <td>{{ article.date_submitted }}</td>
                                 <td>{{ article.correspondence_author.full_name }}</td>
                                 <td>{{ article.section.name }}</td>
-                                <td><a href="{% url 'bc_article' article.pk %}">View</a></td>
+                                <td>
+                                    <div class="btn-group">
+                                        <a href="{% url 'bc_article' article.pk %}" class="btn btn-secondary">View</a>
+                                        <a href="{% url 'bc_delete_article' article.pk %}" class="btn btn-secondary">Delete</a>
+                                    </div>
+                                </td>
                             </tr>
                             {% empty %}
                             <tr>
@@ -69,4 +74,17 @@
             </div>
         </div>
     </section>
+{% endblock %}
+
+{% block js %}
+    {% include "elements/datatables.html" with target="#unassigned" %}
+{% endblock %}
+
+{% block css %}
+<style rel="stylesheet">
+    .btn-group > a {
+        margin-left: 6px;
+        margin-right: 6px;
+    }
+</style>
 {% endblock %}

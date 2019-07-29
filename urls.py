@@ -7,6 +7,7 @@ from journal.views import article_figure
 urlpatterns = [
     url(r'^$', views.index, name='bc_index'),
     url(r'^article/(?P<article_id>\d+)/$', views.article, name='bc_article'),
+    url(r'^article/(?P<article_id>\d+)/delete/$', views.delete_article, name='bc_delete_article'),
     url(r'^article/(?P<article_id>\d+)/authors/(?P<author_id>\d+)/delete/$', views.delete_author, name='bc_delete_author'),
     
     url(r'^xml_import/$', views.xml_import_upload, name='bc_xml_import_upload'),
