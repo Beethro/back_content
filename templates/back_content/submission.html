@@ -1,0 +1,298 @@
+{% extends "admin/core/base.html" %}
+{% load foundation %}
+{% load static from staticfiles %}
+{% load securitytags %}
+{% load files %}
+{% load i18n %}
+
+{% block title %}Back Content Submission{% endblock %}
+
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    <li><a href="{% url 'bc_index' %}">Back Content Plugin</a></li>
+    <li>{% if article.title %}{{ article.title }}{% else %}New Article{% endif %}</li>
+{% endblock breadcrumbs %}
+
+{% block body %}
+    <section class="content">
+        <div class="row expanded">
+            <div class="large-12 columns box">
+                <form method="POST">
+                    <div class="title-area">
+                        <h2>1. Add A New Article</h2>
+                    </div>
+                    <div class="content">
+                        <div class="large-6 columns">
+                            <label for="id_title">{% trans "Title" %}</label>
+                            {{ article_form.title }}
+                            {{ article_form.title.errors }}
+                        </div>
+                        <div class="large-6 columns">
+                            <label for="id_subtitle">{% trans "Subtitle" %}</label>
+                            {{ article_form.subtitle }}
+                            {{ article_form.subtitle.errors }}
+                        </div>
+                        <div class="large-12 columns">
+                            <label for="id_abstract">
+                                {% trans "Abstract" %}{% if form.abstract.field.required %}*{% endif %}</label>
+                            {{ article_form.abstract }}
+                            {{ article_form.abstract.errors }}
+                        </div>
+                        <div class="large-4 columns">
+                            <label for="id_language">{% trans "Language" %}</label>
+                            {{ article_form.language }}
+                            {{ article_form.language.errors }}
+                        </div>
+                        <div class="large-4 columns">
+                            <label for="id_section">{% trans "Section" %}</label>
+                            {{ article_form.section }}
+                            {{ article_form.section.errors }}
+                        </div>
+                        <div class="large-4 columns error">
+                            <label for="id_license">{% if article_form.license.errors %}
+                                <span style="color: red;">{% endif %}{% trans "License" %}
+                                {% if article_form.license.errors %}</span>{% endif %}
+                                {% if article_form.license.field.required %}*{% endif %}</label>
+                            {{ article_form.license }}
+                            {{ article_form.license.errors }}
+                        </div>
+                        <div class="large-12 columns">
+                            <label for="id_keywords">Keywords</label>
+                            <input type="text" id="id_keywords" name="keywords" value="
+                                    {% if article_form.cleaned_data.keywords %}{{ article_form.cleaned_data.keywords }}{% else %}{% for keyword in article.keywords.all %}{{ keyword.word }}{% if not forloop.last %},{% endif %}{% endfor %}{% endif %}"/>
+                            Hit Enter to add a new keyword.
+                        </div>
+                    </div>
+                    <div class="title-area">
+                        <h2>2. Article Authors</h2>
+                    </div>
+                    <div class="content" data-equalizer data-equalize-on="medium">
+                        <div class="large-7 columns" data-equalizer-watch>
+                            <p>{% trans "You can add an author by clicking the button below. This will open a popup modal for you to complete their details." %}</p>
+                            <p>{% trans "If you know of an existing author, complete only the email field and they will be added as an author." %}</p>
+                            <a href="#" data-open="author" class="small success button">{% trans "Add New Author" %}</a>
+                        </div>
+                        <div class="large-5 columns" data-equalizer-watch>
+                            <h4>{% trans "Current Authors" %}</h4>
+                            <div class="row">
+                                <div class="large-12 columns">
+                                    <table id="author_table">
+                                        <tr>
+                                            <th>{% trans "Name" %}</th>
+                                            <th>{% trans "Email" %}</th>
+                                            <th></th>
+                                        </tr>
+                                        {% for author in article.authors.all %}
+                                            <tr>
+                                                <td>{{ author.full_name }}</td>
+                                                <td>{{ author.email }}</td>
+                                                <td><a href="{% url 'bc_delete_author' article.pk author.pk %}"><i
+                                                        class="fa fa-trash">
+                                                    &nbsp;</i></a></td>
+                                            </tr>
+                                            {% empty %}
+                                            <tr>
+                                                <td colspan="3">{% trans "No authors yet, add one!" %}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </table>
+                                    <hr/>
+                                    <p>{% trans "You are required to select a main author, this author will receive the communications regarding your articles process through our systems. This does not have to be you." %}</p>
+                                    <label for="main-author">{% trans "Select main author" %}:</label>
+                                    <select class="form-control" id="main-author" name="main-author" required>
+                                        <option value="">---------</option>
+                                        {% for author in article.authors.all %}
+                                            <option value="{{ author.pk }}"
+                                                    {% if article.correspondence_author.pk == author.pk %}selected{% endif %}>{{ author.full_name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>      
+                    <div class="title-area">
+                        <h2>3. Galleys</h2>
+                    </div>
+                    <div class="content">
+                        <table class="table table-bordered table-condensed small">
+                            <tr style="text-align: left">
+                                <th>Label</th>
+                                <th width="25%">Filename</th>
+                                <th>Type</th>
+                                <th>Edit</th>
+                                <th>Download</th>
+                                <th>Replace</th>
+                                <th>History</th>
+                                <th>Create PDF</th>
+                                <th>Create EPUB</th>
+                            </tr>
+                            {% for galley in galleys %}
+                                {% can_view_file galley.file as can_view_file_flag %}
+                                {% can_edit_file galley.file article as can_edit_file_flag %}
+                                {% can_view_file_history galley.file article as can_view_file_history_flag %}
+                                <tr>
+                                    <td>{{ galley.label }}</td>
+                                    <td>{{ galley.file.original_filename|truncatechars:40 }} {% if galley.label == 'XML' %}
+                                        &nbsp;
+                                        <small><a target="_blank"
+                                                    href="{% url 'bc_preview_xml_galley' article.pk galley.pk %}"><i
+                                                class="fa fa-search" aria-hidden="true">&nbsp;</i>Preview</a>
+                                        </small>{% endif %}</td>
+                                    <td>Galley</td>
+                                    <td><a href="{% url 'pm_edit_galley' article.pk galley.pk %}?return={{ request.path|urlencode }}" class="fa fa-edit"></a>
+                                    </td>
+                                    <td>{% if can_view_file_flag %}
+                                        <a href="{% url 'article_file_download' 'id' article.pk galley.file.pk %}"><i
+                                                class="fa fa-download">&nbsp;</i></a>{% endif %}
+                                    </td>
+                                    <td>{% if can_edit_file_flag %}
+                                        <a href="{% url 'article_file_replace' 'id' article.pk galley.file.pk %}?return={{ request.path|urlencode }}"><i
+                                                class="fa fa-cloud-upload">&nbsp;</i></a>{% endif %}
+                                    </td>
+                                    <td>{% if can_view_file_history_flag %}
+                                        <a href="{% url 'file_history' article.pk galley.file.pk %}?return={{ request.path|urlencode }}"><i
+                                                class="fa fa-history">
+                                            &nbsp;</i></a>{% endif %}
+                                    </td>
+                                    <td>
+                                        {% if galley.file.mime_type == 'application/xml' and not galley.has_missing_image_files %}
+                                            <a href="{% url 'cassius_generate' galley.pk %}?return={{ request.path|urlencode }}">
+                                                <i class="fa fa-file-text-o">&nbsp;</i>
+                                            </a>
+                                        {% elif not galley.file.mime_type == 'application/xml' %}
+                                            Function for XML only.
+                                        {% elif galley.file.mime_type == 'application/xml' and galley.has_missing_image_files %}
+                                            <p><span data-tooltip aria-haspopup="true" class="has-tip top"
+                                                        data-disable-hover="false"
+                                                        tabindex="2"
+                                                        title="{% has_missing_supplements galley %}">Missing Supplements</span>
+                                            </p>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if galley.file.mime_type == 'application/xml' and not galley.has_missing_image_files %}
+                                            <a href="{% url 'epub_generate' galley.pk %}?return={{ request.path|urlencode }}">
+                                                <i class="fa fa-book">&nbsp;</i>
+                                            </a>
+                                        {% elif not galley.file.mime_type == 'application/xml' %}
+                                            Function for XML only.
+                                        {% elif galley.file.mime_type == 'application/xml' and galley.has_missing_image_files %}
+                                            <p><span data-tooltip aria-haspopup="true" class="has-tip top"
+                                                        data-disable-hover="false"
+                                                        tabindex="2"
+                                                        title="{% has_missing_supplements galley %}">Missing Supplements</span>
+                                            </p>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="9">No galleys have been uploaded.</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                        <a class="button success float-right" data-open="uploadbox"><i class="fa fa-cloud-upload">
+                            &nbsp;</i>Upload a new galley</a>
+                    </div>
+                    <div class="title-area">
+                        <h2>4. Publication Info</h2>
+                    </div>
+                    <div class="content">
+                        <div class="large-4 columns">
+                            {{ pub_form.date_published|foundation }}
+                        </div>
+                        <div class="large-4 columns">
+                            {{ pub_form.date_accepted|foundation }}
+                        </div>
+                        <div class="large-4 columns">
+                            {{ pub_form.render_galley|foundation }}
+                        </div>
+                        <div class="large-4 columns">
+                            {{ pub_form.primary_issue|foundation }}
+                        </div>
+                        <div class="large-4 columns">
+                            {{ pub_form.page_numbers|foundation }}
+                        </div>
+                        <div class="large-4 columns">
+                            <br/>
+                            {{ pub_form.peer_reviewed|foundation }}
+                        </div>
+                        <div class="large-12 columns">
+                            {% if article and article.date_published %}
+                            <p>More Pub Info is available on the <a href="{% url 'publish_article' article.pk %}">Pre Publication Checklist</a>.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="title-area">
+                        <h2>5. Remote</h2>
+                    </div>
+                    <div class="content">
+                        <p>If your article is remote, you can fill the required details here. If the remote article has
+                            a DOI, you should use it for full resolution. .</p>
+                        <div class="row expanded">
+                            <div class="large-6 columns">
+                                {{ remote_form.is_remote|foundation }}
+                            </div>
+                            <div class="large-6 columns">
+                                {{ remote_form.remote_url|foundation }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="title-area">
+                        <h2>6. Publish</h2>
+                    </div>
+                    <div class="content">
+                        <p>When you are ready to publish your article, press the publish button and it will be
+                            published.</p>
+                        <div class="large-12 columns">
+                            {% csrf_token %}
+                            <button class="success button pull-right" type="submit" name="publish">
+                                <i class="fa fa-check-circle">&nbsp;</i>Publish
+                            </button>
+                            <button class="success button pull-right" type="submit" name="draft">
+                                <i class="fa fa-check-circle">&nbsp;</i>Save as Draft
+                            </button>
+                            <button class="success button pull-right" type="submit" name="delete">
+                                <i class="fa fa-check-circle">&nbsp;</i>Delete
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                {% include "back_content/submission_author.html" %}
+            </div>
+        </div>
+    </section>
+    {% include "elements/production/new_galley.html" %}
+{% endblock %}
+
+{% block js %}
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+    <script type="text/javascript" src="{% static "common/js/jq-ui.min.js" %}"></script>
+    <script src="{% static "common/js/tagit.js" %}"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#id_keywords").tagit(
+                {allowSpaces: true});
+        });
+
+        function onAddAuthor(author, link) {
+            console.log(author)
+            $("#author_table").append($("<tr><td>" + author.first_name + " " + author.last_name + "</td><td>" + author.email + "</td><td><a href='" + link + "'><i class='fa fa-trash'>&nbsp;</i></a></td></tr>"))
+        }
+    </script>
+    {% if modal %}
+        {% include "elements/open_modal.html" with target=modal %}
+    {% endif %}
+    {% include "elements/datepicker.html" with target=".datepicker" %}
+{% endblock %}
+
+{% block css %}
+<style rel="stylesheet">
+    .btn-group > button {
+        margin-left: 6px;
+        margin-right: 6px;
+    }
+</style>
+{% endblock %}

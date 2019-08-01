@@ -1,10 +1,16 @@
 import requests
+import json
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.utils import timezone
 from django.http import Http404
+from django.template import loader
+from django.template import RequestContext
+from django.core import serializers
+from django.http import JsonResponse
+from django.contrib.messages import get_messages
 
 from submission import models, forms, logic
 from core import models as core_models, files
@@ -15,6 +21,7 @@ from security.decorators import editor_user_required
 from utils import shared
 from journal import logic as journal_logic
 from events import logic as event_logic
+from utils import views
 
 
 @editor_user_required
@@ -50,6 +57,9 @@ def article(request, article_id):
     modal = None
 
     if request.POST:
+        if 'add_author' in request.POST:
+            return handleAddAuthor(request, article)
+        
         if 'save_section_1' in request.POST:
             article_form = forms.ArticleInfo(request.POST, instance=article)
 
@@ -104,30 +114,6 @@ def article(request, article_id):
             for uploaded_file in request.FILES.getlist('other-file'):
                 prod_logic.save_galley(article, request, uploaded_file, True, "Other", True)
 
-        if 'add_author' in request.POST:
-            author_form = bc_forms.BackContentAuthorForm(request.POST)
-            modal = 'author'
-
-            author_exists = logic.check_author_exists(request.POST.get('email'))
-            if author_exists:
-                article.authors.add(author_exists)
-                messages.add_message(request, messages.SUCCESS, '%s added to the article' % author_exists.full_name())
-                return redirect(reverse('bc_article', kwargs={'article_id': article_id}))
-            else:
-                if author_form.is_valid():
-                    if author_form.cleaned_data["first_name"] and author_form.cleaned_data["last_name"] and author_form.cleaned_data["institution"]:
-                        new_author = author_form.save(commit=False)
-                        new_author.username = new_author.email
-                        new_author.set_password(shared.generate_password())
-                        new_author.save()
-                        new_author.add_account_role(role_slug='author', journal=request.journal)
-                        article.authors.add(new_author)
-                        messages.add_message(request, messages.SUCCESS, '%s added to the article' % new_author.full_name())
-
-                        return redirect(reverse('bc_article', kwargs={'article_id': article_id}))
-                    else:
-                        messages.add_message(request, messages.ERROR, '%s could not be found. Enter Firstname, Lastname and Institution' % request.POST.get('email'))
-
         if 'publish' in request.POST:
             if not article.stage == models.STAGE_PUBLISHED:
                 id_logic.generate_crossref_doi_with_pattern(article)
@@ -152,7 +138,7 @@ def article(request, article_id):
         if 'delete' in request.POST:
             return redirect(reverse('bc_delete_article', kwargs={'article_id': article_id}))
 
-    template = 'back_content/article.html'
+    template = 'back_content/submission.html'
     context = {
         'article': article,
         'article_form': article_form,
@@ -277,3 +263,48 @@ def preview_xml_galley(request, article_id, galley_id):
     }
 
     return render(request, template, context)
+
+
+def handleAddAuthor(request, article):
+    author_form = bc_forms.BackContentAuthorForm(request.POST)
+    modal = 'author'
+    context = { }
+
+
+    author_exists = logic.check_author_exists(request.POST.get('email'))
+    if author_exists:
+        author_on_article = article.authors.filter(id=author_exists.id)
+
+        if not author_on_article:
+            article.authors.add(author_exists)
+            messages.add_message(request, messages.SUCCESS, '%s added to the article' % author_exists.full_name())
+            context = { 
+                'url': reverse('bc_delete_author', kwargs={'article_id': article.pk, 'author_id': author_exists.pk }), 
+                'author': serializers.serialize('json', [author_exists]) 
+            }
+        else:
+            messages.add_message(request, messages.ERROR, '%s is already author' % author_exists.full_name())
+    else:
+        if author_form.is_valid():
+            if author_form.cleaned_data["first_name"] and author_form.cleaned_data["last_name"] and author_form.cleaned_data["institution"]:
+                new_author = author_form.save(commit=False)
+                new_author.username = new_author.email
+                new_author.set_password(shared.generate_password())
+                new_author.save()
+                new_author.add_account_role(role_slug='author', journal=request.journal)
+                article.authors.add(new_author)
+                messages.add_message(request, messages.SUCCESS, '%s added to the article' % new_author.full_name())
+                context = { 
+                    'url': reverse('bc_delete_author', kwargs={'article_id': article.pk, 'author_id': author_exists.pk }), 
+            'author': serializers.serialize('json', [new_author]) 
+                }
+            else:
+                messages.add_message(request, messages.ERROR, '%s could not be found. Enter Firstname, Lastname and Institution' % request.POST.get('email'))
+
+    template = 'back_content/new_author.html'
+
+    data = {
+        'msg': loader.render_to_string('core/messages.html', { 'messages': get_messages(request) }, None),
+        'context': json.dumps(context)
+    }
+    return JsonResponse(data)
