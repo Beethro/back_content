@@ -115,7 +115,7 @@
                         <h2>3. Galleys</h2>
                     </div>
                     <div class="content">
-                        <table class="table table-bordered table-condensed small">
+                        <table id="upload-table" class="table table-bordered table-condensed small">
                             <tr style="text-align: left">
                                 <th>Label</th>
                                 <th width="25%">Filename</th>
@@ -250,19 +250,19 @@
                             <button class="success button pull-right" type="submit" name="publish">
                                 <i class="fa fa-check-circle">&nbsp;</i>Publish
                             </button>
-                            <button class="success button pull-right" type="submit" name="draft">
+                            <button class="success button pull-right" type="submit" name="draft" formnovalidate>
                                 <i class="fa fa-check-circle">&nbsp;</i>Save as Draft
                             </button>
-                            <button class="success button pull-right" type="submit" name="delete">
+                            <button class="success button pull-right" type="submit" name="delete" formnovalidate>
                                 <i class="fa fa-check-circle">&nbsp;</i>Delete
                             </button>
                         </div>
                     </div>
                 </form>
-                {% include "back_content/submission_author.html" %}
             </div>
         </div>
     </section>
+    {% include "back_content/submission_author.html" %}
     {% include "elements/production/new_galley.html" %}
 {% endblock %}
 
@@ -275,11 +275,144 @@
         $(document).ready(function () {
             $("#id_keywords").tagit(
                 {allowSpaces: true});
+
+            $("#author_table").on("click", "a", function(e){
+                e.preventDefault()
+                
+                var id = this.href.split("/")[8]
+                $.get(this.href, function(data, textStatus, xhr) {
+                    if(xhr.status == 200) {
+                        removeAuthor(id)
+                    }
+                })
+            });
+
+            $("#upload-table").on("click", "a", function(e) {
+                if(!confirm("This action will cause loss of all unsaved progress! Are you sure you want to continue?")) {
+                    e.preventDefault()
+                }
+            })
+
+            $("#uploadbox").on("click", "button", function(e) {
+                e.preventDefault()
+
+                var csrf_token = $("#uploadbox input[name='csrfmiddlewaretoken']").val()
+                var formData = new FormData()
+                var file;
+
+                formData.append('csrfmiddlewaretoken', csrf_token)
+
+                if ($(this).attr("name") == "xml") {
+                    file = $('input[name="xml-file"]')[0].files[0]; 
+
+                    formData.append('xml-file', file); 
+                    formData.append('xml', 'true')
+                }
+
+                if ($(this).attr("name") == "pdf") {
+                    file = $('input[name="pdf-file"]')[0].files[0]; 
+
+                    formData.append('pdf-file', file); 
+                    formData.append('pdf', 'true')
+                }
+
+                if ($(this).attr("name") == "other") {
+                    file = $('input[name="other-file"]')[0].files[0]; 
+
+                    formData.append('other-file', file); 
+                    formData.append('other', 'true')
+                }
+
+                $.ajax({ 
+                    url: '', 
+                    type: 'post', 
+                    data: formData, 
+                    contentType: false, 
+                    processData: false, 
+                    success: function(response){ 
+                        if(response != 0){ 
+                            context = JSON.parse(response.context)
+                            if(context.galley != undefined) {
+                                var jsonGalley = JSON.parse(context.galley)[0]
+
+                                var filename = file.name.length > 37 ? file.name.substring(0, 37) + "..." : file.name
+                                var editLink = '<a href="/production/' + jsonGalley.fields.article + '/galley/' + jsonGalley.pk + '/?return=/plugins/back_content/article/' + jsonGalley.fields.article + '/" class="fa fa-edit"></a>'
+                                var downloadLink = '<a href="/article/id/' + jsonGalley.fields.article + '/file/' + jsonGalley.fields.file + '/"><i class="fa fa-download"></i></a>'
+                                var replaceLink = '<a href="/article/id/' + jsonGalley.fields.article + '/file/' + jsonGalley.fields.file + '/replace?return=/plugins/back_content/article/' + jsonGalley.fields.article + '/"><i class="fa fa-cloud-upload"></i></a>'
+                                var historyLink = '<a href="/' + jsonGalley.fields.article + '/files/' + jsonGalley.fields.file + '/history/?return=/plugnis/back_content/article/' + jsonGalley.fields.article + '/"><i class="fa fa-history"></i></a>'
+                                
+                                var files = $("#upload-table > tbody > tr")
+                                var emptyFiles = files.eq(1).children().length === 1;
+
+                                if(emptyFiles) {
+                                    files[1].remove();
+                                }
+
+                                $("#upload-table > tbody").append("<tr><td>" + jsonGalley.fields.label + "</td><td>" 
+                                + filename + "<td>Galley</td><td>" 
+                                + editLink + "</td><td>" 
+                                + downloadLink + "</td><td>" 
+                                + replaceLink + "</td><td>" 
+                                + historyLink + "</td>"
+                                + "<td>Function for XML only</td>"
+                                + "<td>Function for XML only</td></tr>");
+                            }
+                            messages = JSON.parse(response.msg)
+                            if(messages != undefined) {
+                                for (var i = 0; i < messages.length; i++) {
+                                    if(messages[i].tags == "success") {
+                                        toastr.success(messages[i].message);
+                                    } else if(messages[i].tags == "warn") {
+                                        toastr.warn(messages[i].message);
+                                    } else {
+                                        toastr.error(messages[i].message);
+                                    }
+                                }
+                            }
+                        } 
+                        else{ 
+                            alert('file not uploaded'); 
+                        } 
+
+                        $('#uploadbox').foundation('close');
+                    }, 
+                }); 
+            })
         });
 
-        function onAddAuthor(author, link) {
-            console.log(author)
+        function onAddAuthor(id, author, link) {
+            var authors = $("#author_table > tbody > tr")
+            var emptyAuthor = authors.eq(1).children().length === 1;
+
+            if(emptyAuthor) {
+                authors[1].remove();
+            }
             $("#author_table").append($("<tr><td>" + author.first_name + " " + author.last_name + "</td><td>" + author.email + "</td><td><a href='" + link + "'><i class='fa fa-trash'>&nbsp;</i></a></td></tr>"))
+            $("#main-author").append('<option value="' + id + '">' + author.first_name + " " + author.last_name + '</option>')
+        }
+
+        function removeAuthor(id) {
+            var found = false
+            $("#author_table > tbody > tr").each(function(i) {
+                $(this).find("a").each(function(j) {
+                  if($(this).attr("href").indexOf(id) > -1) {
+                      found = true
+                  }
+                })
+                if(found) {
+                    $(this).remove()
+                    return false
+                }
+            })
+
+            $('#main-author > option[value="' + id + '"]').remove()
+
+            var authors = $("#author_table > tbody > tr")
+            var emptyAuthor = authors.eq(1).children().length === 0;
+
+            if(emptyAuthor) {
+                $("#author_table").append($('<tr><td colspan="3">No authors yet, add one!</td></tr>'))
+            }
         }
     </script>
     {% if modal %}

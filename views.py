@@ -60,61 +60,11 @@ def article(request, article_id):
         if 'add_author' in request.POST:
             return handleAddAuthor(request, article)
         
-        if 'save_section_1' in request.POST:
-            article_form = forms.ArticleInfo(request.POST, instance=article)
-
-            if article_form.is_valid():
-                article_form.save()
-                return redirect(reverse('bc_article', kwargs={'article_id': article.pk}))
-
-        if 'save_section_2' in request.POST:
-            correspondence_author = request.POST.get('main-author', None)
-
-            if correspondence_author:
-                author = core_models.Account.objects.get(pk=correspondence_author)
-                article.correspondence_author = author
-                article.save()
-                return redirect(reverse('bc_article', kwargs={'article_id': article.pk}))
-
-        if 'save_section_4' in request.POST:
-            pub_form = bc_forms.PublicationInfo(request.POST, instance=article)
-
-            if pub_form.is_valid():
-                pub_form.save()
-                if article.primary_issue:
-                    article.primary_issue.articles.add(article)
-
-                if article.date_published:
-                    article.stage = models.STAGE_READY_FOR_PUBLICATION
-                    article.save()
-                return redirect(reverse('bc_article', kwargs={'article_id': article.pk}))
-
-        if 'save_section_5' in request.POST:
-            remote_form = bc_forms.RemoteArticle(request.POST, instance=article)
-
-            if remote_form.is_valid():
-                remote_form.save()
-                return redirect(reverse('bc_article', kwargs={'article_id': article.pk}))
-
-        if 'xml' in request.POST:
-            for uploaded_file in request.FILES.getlist('xml-file'):
-                if not files.check_in_memory_mime_with_types(in_memory_file=uploaded_file, mime_types=files.MIMETYPES_WITH_FIGURES):
-                    messages.add_message(request, messages.WARNING, 'File is not XML/HTML!')
-                else:
-                    prod_logic.save_galley(article, request, uploaded_file, True, "XML", False)
-
-        if 'pdf' in request.POST:
-            for uploaded_file in request.FILES.getlist('pdf-file'):
-                if not files.check_in_memory_mime_with_types(in_memory_file=uploaded_file, mime_types=files.PDF_MIMETYPES):
-                    messages.add_message(request, messages.WARNING, 'File is not PDF!')
-                else:
-                    prod_logic.save_galley(article, request, uploaded_file, True, "PDF", False)
-
-        if 'other' in request.POST:
-            for uploaded_file in request.FILES.getlist('other-file'):
-                prod_logic.save_galley(article, request, uploaded_file, True, "Other", True)
+        if 'xml' in request.POST or 'pdf' in request.POST or 'other' in request.POST:
+            return handleFileUpload(request, article)
 
         if 'publish' in request.POST:
+            handleSaveForm(request, article)
             if not article.stage == models.STAGE_PUBLISHED:
                 id_logic.generate_crossref_doi_with_pattern(article)
                 article.stage = models.STAGE_PUBLISHED
@@ -133,6 +83,7 @@ def article(request, article_id):
                 return redirect(reverse('bc_index'))
 
         if 'draft' in request.POST:
+            handleSaveForm(request, article)
             return redirect(reverse('bc_index'))
 
         if 'delete' in request.POST:
@@ -280,7 +231,7 @@ def handleAddAuthor(request, article):
             messages.add_message(request, messages.SUCCESS, '%s added to the article' % author_exists.full_name())
             context = { 
                 'url': reverse('bc_delete_author', kwargs={'article_id': article.pk, 'author_id': author_exists.pk }), 
-                'author': serializers.serialize('json', [author_exists]) 
+                'author': serializers.serialize('json', [author_exists], fields=["first_name", "last_name", "email"]) 
             }
         else:
             messages.add_message(request, messages.ERROR, '%s is already author' % author_exists.full_name())
@@ -296,15 +247,79 @@ def handleAddAuthor(request, article):
                 messages.add_message(request, messages.SUCCESS, '%s added to the article' % new_author.full_name())
                 context = { 
                     'url': reverse('bc_delete_author', kwargs={'article_id': article.pk, 'author_id': author_exists.pk }), 
-            'author': serializers.serialize('json', [new_author]) 
+            'author': serializers.serialize('json', [new_author], fields=["first_name", "last_name", "email"]) 
                 }
             else:
                 messages.add_message(request, messages.ERROR, '%s could not be found. Enter Firstname, Lastname and Institution' % request.POST.get('email'))
-
-    template = 'back_content/new_author.html'
 
     data = {
         'msg': loader.render_to_string('core/messages.html', { 'messages': get_messages(request) }, None),
         'context': json.dumps(context)
     }
     return JsonResponse(data)
+
+def handleFileUpload(request, article):
+    context = { }
+    galley = None
+
+    if 'xml' in request.POST:
+        for uploaded_file in request.FILES.getlist('xml-file'):
+            if not files.check_in_memory_mime_with_types(in_memory_file=uploaded_file, mime_types=files.MIMETYPES_WITH_FIGURES):
+                messages.add_message(request, messages.WARNING, 'File is not XML/HTML!')
+            else:
+                galley = prod_logic.save_galley(article, request, uploaded_file, True, "XML", True)
+                messages.add_message(request, messages.SUCCESS, 'File added!')
+
+    if 'pdf' in request.POST:
+        for uploaded_file in request.FILES.getlist('pdf-file'):
+            if not files.check_in_memory_mime_with_types(in_memory_file=uploaded_file, mime_types=files.PDF_MIMETYPES):
+                messages.add_message(request, messages.WARNING, 'File is not PDF!')
+            else:
+                galley = prod_logic.save_galley(article, request, uploaded_file, True, "PDF", True)
+                messages.add_message(request, messages.SUCCESS, 'File added!')
+
+    if 'other' in request.POST:
+        for uploaded_file in request.FILES.getlist('other-file'):
+            galley = prod_logic.save_galley(article, request, uploaded_file, True, "Other", True)
+            messages.add_message(request, messages.SUCCESS, 'File added!')
+
+    if galley != None:
+        context['galley']= serializers.serialize('json', [galley], fields=["article", "file", "label"])
+    
+    data = {
+        'msg': loader.render_to_string('core/messages.html', { 'messages': get_messages(request) }, None),
+        'context': json.dumps(context)
+    }
+    return JsonResponse(data)
+
+def handleSaveForm(request, article):
+
+    article_form = forms.ArticleInfo(request.POST, instance=article)
+
+    if article_form.is_valid():
+        article_form.save()
+
+    correspondence_author = request.POST.get('main-author', None)
+
+    if correspondence_author:
+        author = core_models.Account.objects.get(pk=correspondence_author)
+        article.correspondence_author = author
+        article.save()
+
+    pub_form = bc_forms.PublicationInfo(request.POST, instance=article)
+
+    if pub_form.is_valid():
+        pub_form.save()
+        if article.primary_issue:
+            article.primary_issue.articles.add(article)
+
+        if article.date_published:
+            article.stage = models.STAGE_READY_FOR_PUBLICATION
+            article.save()
+
+    remote_form = bc_forms.RemoteArticle(request.POST, instance=article)
+
+    if remote_form.is_valid():
+        remote_form.save()
+
+    return True

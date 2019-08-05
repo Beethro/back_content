@@ -118,7 +118,7 @@
 
                 function addAuthor() {
                     var csrf_token = $("[name='csrfmiddlewaretoken']")
-                    console.log(salutationInput.value)
+                    
                     data = {
                         "csrfmiddlewaretoken": csrf_token.val(),
                         "salutation": salutationInput.value,
@@ -137,14 +137,24 @@
                         "add_author": true
                     }
 
-                    console.log(data)
-
                     $.post("", data, function(response) {
                         context = JSON.parse(response.context)
-                        console.log(context.url)
                         if(context.author != undefined) {
-                            console.log("defined")
-                            onAddAuthor(JSON.parse(context.author)[0].fields, context.url)
+                            var jsonAuthor = JSON.parse(context.author)[0]
+                            onAddAuthor(jsonAuthor.pk, jsonAuthor.fields, context.url)
+                            $('#author').foundation('close');
+                        }
+                        messages = JSON.parse(response.msg)
+                        if(messages != undefined) {
+                            for (var i = 0; i < messages.length; i++) {
+                                if(messages[i].tags == "success") {
+                                    toastr.success(messages[i].message);
+                                } else if(messages[i].tags == "warn") {
+                                    toastr.warn(messages[i].message);
+                                } else {
+                                    toastr.error(messages[i].message);
+                                }
+                            }
                         }
                     })
                 }
