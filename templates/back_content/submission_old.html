@@ -19,35 +19,10 @@
         <div class="row expanded">
             <div class="large-12 columns box">
                 <form method="POST">
-                    {% csrf_token %}
-                    <div class="content">
-                        <div class="large-6 columns">
-                            <select name="language_code" onchange="this.form.submit()">
-                                {% get_available_languages as LANGUAGES %}
-                                {% get_language_info_list for LANGUAGES as languages %}
-                                {% for language in languages %}
-                                    <option value="{{ language.code }}"{% if language.code == current_language %}
-                                            selected{% endif %}>
-                                        {{ language.name_local }} ({{ language.code }})
-                                    </option>
-                                {% endfor %}
-                            </select>
-                            <input type="hidden" name="no_commit" />
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-        <div class="row expanded">
-            <div class="large-12 columns box">
-                <form method="POST">
-                    {% csrf_token %}
                     <div class="title-area">
                         <h2>1. Add A New Article</h2>
                     </div>
                     <div class="content">
-                        <input type="hidden" name="language_code" value="{{ current_language }}">
-                        <!-- ArticleForm -->
                         <div class="large-6 columns">
                             <label for="id_title">{% trans "Title" %}</label>
                             {{ article_form.title }}
@@ -135,7 +110,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>      
                     <div class="title-area">
                         <h2>3. Galleys</h2>
                     </div>
@@ -445,7 +420,6 @@
     {% endif %}
     {% include "elements/datepicker.html" with target=".datepicker" %}
 {% endblock %}
-
 
 {% block css %}
 <style rel="stylesheet">

@@ -4,7 +4,7 @@ import json
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.urlresolvers import reverse
 from django.contrib import messages
-from django.utils import timezone
+from django.utils import timezone, translation
 from django.http import Http404
 from django.template import loader
 from django.template import RequestContext
@@ -27,12 +27,12 @@ from utils import views
 @editor_user_required
 def index(request):
     if request.POST:
-        article = models.Article.objects.create(journal=request.journal,
+        article = models.TransArticle.objects.language('en').fallbacks('en').create(journal=request.journal,
                                                 date_accepted=timezone.now(),
                                                 is_import=True)
         return redirect(reverse('bc_article', kwargs={'article_id': article.pk}))
 
-    articles = models.Article.objects.filter(journal=request.journal)
+    articles = models.TransArticle.objects.language().fallbacks('en').filter(journal=request.journal)
 
     template = 'back_content/new_article.html'
     context = {
@@ -41,9 +41,78 @@ def index(request):
 
     return render(request, template, context)
 
-
 @editor_user_required
 def article(request, article_id):
+    
+    current_language = translation.get_language()
+
+    if request.POST:
+        if 'language_code' in request.POST:
+            languageForm = bc_forms.LanguageInfo(request.POST)
+            if languageForm.is_valid():
+                current_language = languageForm.cleaned_data['language_code']
+
+    article = models.TransArticle.objects.language(current_language).fallbacks('en').filter(pk=article_id).first()
+
+    if not current_language in article.get_available_languages():
+        article.translate(current_language)
+   
+    article_form = forms.ArticleInfo(instance=article)
+    author_form = bc_forms.BackContentAuthorForm()
+    pub_form = bc_forms.PublicationInfo(instance=article)
+    remote_form = bc_forms.RemoteArticle(instance=article)
+    modal = None
+
+    if request.POST:        
+        if not 'no_commit' in request.POST:
+            if 'add_author' in request.POST:
+                return handleAddAuthor(request, article)
+            
+            if 'xml' in request.POST or 'pdf' in request.POST or 'other' in request.POST:
+                return handleFileUpload(request, article)
+                
+            if 'publish' in request.POST:
+                handleSaveForm(request, article, current_language)
+                if not article.stage == models.STAGE_PUBLISHED:
+                    id_logic.generate_crossref_doi_with_pattern(article)
+                    article.stage = models.STAGE_PUBLISHED
+                    article.snapshot_authors(article)
+                    article.save()
+
+                if plugin_settings.IS_WORKFLOW_PLUGIN:
+                    workflow_kwargs = {'handshake_url': 'bc_article',
+                                    'request': request,
+                                    'article': article,
+                                    'switch_stage': True}
+                    return event_logic.Events.raise_event(event_logic.Events.ON_WORKFLOW_ELEMENT_COMPLETE,
+                                                        task_object=article,
+                                                        **workflow_kwargs)
+                else:
+                    return redirect(reverse('bc_index'))
+
+            if 'draft' in request.POST:
+                handleSaveForm(request, article, current_language)
+                return redirect(reverse('bc_index'))
+
+            if 'delete' in request.POST:
+                return redirect(reverse('bc_delete_article', kwargs={'article_id': article_id}))
+          
+    template = 'back_content/submission.html'
+    context = {
+        'current_language': current_language,
+        'article': article,
+        'article_form': article_form,
+        'form': author_form,
+        'pub_form': pub_form,
+        'remote_form': remote_form,
+        #'galleys': prod_logic.get_all_galleys(article),
+        'modal': modal,
+    }
+
+    return render(request, template, context)
+
+@editor_user_required
+def article_old(request, article_id):
     article = get_object_or_404(models.Article, pk=article_id, journal=request.journal)
 
     if not article.license:
@@ -89,7 +158,7 @@ def article(request, article_id):
         if 'delete' in request.POST:
             return redirect(reverse('bc_delete_article', kwargs={'article_id': article_id}))
 
-    template = 'back_content/submission.html'
+    template = 'back_content/submission_old.html'
     context = {
         'article': article,
         'article_form': article_form,
@@ -104,7 +173,7 @@ def article(request, article_id):
 
 @editor_user_required
 def delete_article(request, article_id):
-    article = get_object_or_404(models.Article, pk=article_id, journal=request.journal)
+    article = models.TransArticle.objects.filter(pk=article_id)
     article.delete()
     messages.add_message(request, messages.SUCCESS, '%s deleted', article_id)
     return redirect(reverse('bc_index'))
@@ -292,9 +361,9 @@ def handleFileUpload(request, article):
     }
     return JsonResponse(data)
 
-def handleSaveForm(request, article):
+def handleSaveForm(request, article, current_language):
 
-    article_form = forms.ArticleInfo(request.POST, instance=article)
+    article_form = forms.TransArticleInfo(request.POST, instance=article, language=current_language)
 
     if article_form.is_valid():
         article_form.save()
