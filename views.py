@@ -52,12 +52,14 @@ def article(request, article_id):
             if languageForm.is_valid():
                 current_language = languageForm.cleaned_data['language_code']
 
-    article = models.TransArticle.objects.language(current_language).fallbacks('en').filter(pk=article_id).first()
+    article = models.TransArticle.objects.language(current_language).filter(pk=article_id).first()
+    keywords = models.TransKeyword.objects.language(current_language).filter(articles__id=article_id).values_list("word", flat=True)
 
-    if not current_language in article.get_available_languages():
-        article.translate(current_language)
+    print(keywords)
+    #if not current_language in article.get_available_languages():
+    #    article.translate(current_language)
    
-    article_form = forms.ArticleInfo(instance=article)
+    article_form = forms.TransArticleInfo(instance=article, keywords=keywords, language=current_language)
     author_form = bc_forms.BackContentAuthorForm()
     pub_form = bc_forms.PublicationInfo(instance=article)
     remote_form = bc_forms.RemoteArticle(instance=article)
@@ -113,7 +115,7 @@ def article(request, article_id):
 
 @editor_user_required
 def article_old(request, article_id):
-    article = get_object_or_404(models.Article, pk=article_id, journal=request.journal)
+    article = get_object_or_404(models.TransArticle, pk=article_id, journal=request.journal)
 
     if not article.license:
         default_configuration = request.journal.submissionconfiguration
@@ -182,7 +184,7 @@ def delete_article(request, article_id):
 def delete_author(request, article_id, author_id):
     """Allows submitting author to delete an author object."""
     article = get_object_or_404(
-        models.Article,
+        models.TransArticle,
         pk=article_id,
         journal=request.journal
     )
@@ -262,12 +264,12 @@ def preview_xml_galley(request, article_id, galley_id):
     """
     Allows an editor to preview an article's XML galleys.
     :param request: HttpRequest
-    :param article_id: Article object ID (INT)
+    :param article_id: TransArticle object ID (INT)
     :param galley_id: Galley object ID (INT)
     :return: HttpResponse
     """
 
-    article = get_object_or_404(models.Article, journal=request.journal, pk=article_id)
+    article = get_object_or_404(models.TransArticle, journal=request.journal, pk=article_id)
     galley = core_models.Galley.objects.filter(article=article, file__mime_type__contains='/xml', pk=galley_id)
 
     if not galley:
@@ -366,7 +368,9 @@ def handleSaveForm(request, article, current_language):
     article_form = forms.TransArticleInfo(request.POST, instance=article, language=current_language)
 
     if article_form.is_valid():
+        keywords = article_form.cleaned_data['keywords']
         article_form.save()
+    print(article_form.errors)
 
     correspondence_author = request.POST.get('main-author', None)
 
