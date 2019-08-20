@@ -55,7 +55,6 @@ def article(request, article_id):
     article = models.TransArticle.objects.language(current_language).filter(pk=article_id).first()
     keywords = models.TransKeyword.objects.language(current_language).filter(articles__id=article_id).values_list("word", flat=True)
 
-    print(keywords)
     #if not current_language in article.get_available_languages():
     #    article.translate(current_language)
    
@@ -183,11 +182,7 @@ def delete_article(request, article_id):
 @editor_user_required
 def delete_author(request, article_id, author_id):
     """Allows submitting author to delete an author object."""
-    article = get_object_or_404(
-        models.TransArticle,
-        pk=article_id,
-        journal=request.journal
-    )
+    article = models.TransArticle.objects.language().filter(pk=article_id).first()
     author = get_object_or_404(
         core_models.Account,
         pk=author_id
@@ -200,11 +195,11 @@ def delete_author(request, article_id, author_id):
         article.save()
 
     try:
-        ordering = models.ArticleAuthorOrder.objects.get(
+        ordering = models.TransArticleAuthorOrder.objects.get(
             article=article,
             author=author,
         ).delete()
-    except models.ArticleAuthorOrder.DoesNotExist:
+    except models.TransArticleAuthorOrder.DoesNotExist:
         pass
 
     return redirect(reverse('bc_article', kwargs={'article_id': article_id}))
