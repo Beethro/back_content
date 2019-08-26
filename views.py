@@ -52,7 +52,7 @@ def article(request, article_id):
             if languageForm.is_valid():
                 current_language = languageForm.cleaned_data['language_code']
 
-    article = models.TransArticle.objects.language(current_language).filter(pk=article_id).first()
+    article = models.TransArticle.objects.language(current_language).fallbacks('en').filter(pk=article_id).first()
     keywords = models.TransKeyword.objects.language(current_language).filter(articles__id=article_id).values_list("word", flat=True)
 
     #if not current_language in article.get_available_languages():
@@ -106,7 +106,7 @@ def article(request, article_id):
         'form': author_form,
         'pub_form': pub_form,
         'remote_form': remote_form,
-        #'galleys': prod_logic.get_all_galleys(article),
+        'galleys': prod_logic.get_all_galleys(article),
         'modal': modal,
     }
 
