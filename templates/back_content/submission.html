@@ -98,9 +98,9 @@
                                         {% endfor %}
                                     </table>
                                     <hr/>
-                                    <p>{% trans "You are required to select a main author, this author will receive the communications regarding your articles process through our systems. This does not have to be you." %}</p>
+                                    <p>{% trans "You may select a main author, this author will receive the communications regarding your articles process through our systems. This does not have to be you." %}</p>
                                     <label for="main-author">{% trans "Select main author" %}:</label>
-                                    <select class="form-control" id="main-author" name="main-author" required>
+                                    <select class="form-control" id="main-author" name="main-author">
                                         <option value="">---------</option>
                                         {% for author in article.authors.all %}
                                             <option value="{{ author.pk }}"
