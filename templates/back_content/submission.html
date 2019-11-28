@@ -33,11 +33,27 @@
                             {{ article_form.subtitle }}
                             {{ article_form.subtitle.errors }}
                         </div>
+                        <div class="large-6 columns">
+                            <label for="id_title_de">{% trans "Title (de)" %}</label>
+                            {{ article_form.title_de }}
+                            {{ article_form.title_de.errors }}
+                        </div>
+                        <div class="large-6 columns">
+                            <label for="id_subtitle_de">{% trans "Subtitle (de)" %}</label>
+                            {{ article_form.subtitle_de }}
+                            {{ article_form.subtitle_de.errors }}
+                        </div>
                         <div class="large-12 columns">
                             <label for="id_abstract">
                                 {% trans "Abstract" %}{% if form.abstract.field.required %}*{% endif %}</label>
                             {{ article_form.abstract }}
                             {{ article_form.abstract.errors }}
+                        </div>
+                        <div class="large-12 columns">
+                            <label for="id_abstract_de">
+                                {% trans "Abstract (de)" %}{% if form.abstract.field.required %}*{% endif %}</label>
+                            {{ article_form.abstract_de }}
+                            {{ article_form.abstract_de.errors }}
                         </div>
                         <div class="large-4 columns">
                             <label for="id_language">{% trans "Language" %}</label>
@@ -61,6 +77,12 @@
                             <label for="id_keywords">Keywords</label>
                             <input type="text" id="id_keywords" name="keywords" value="
                                     {% if article_form.cleaned_data.keywords %}{{ article_form.cleaned_data.keywords }}{% else %}{% for keyword in article.keywords.all %}{{ keyword.word }}{% if not forloop.last %},{% endif %}{% endfor %}{% endif %}"/>
+                            Hit Enter to add a new keyword.
+                        </div>
+                        <div class="large-12 columns">
+                            <label for="id_keywords_de">Keywords (de)</label>
+                            <input type="text" id="id_keywords_de" name="keywords_de" value="
+                                    {% if article_form.cleaned_data.keywords_de %}{{ article_form.cleaned_data.keywords_de }}{% else %}{% for keyword_de in article.keywords_de.all %}{{ keyword_de.word }}{% if not forloop.last %},{% endif %}{% endfor %}{% endif %}"/>
                             Hit Enter to add a new keyword.
                         </div>
                     </div>
@@ -275,6 +297,9 @@
         $(document).ready(function () {
             $("#id_keywords").tagit(
                 {allowSpaces: true});
+
+            $("#id_keywords_de").tagit(
+            {allowSpaces: true});
 
             $("#author_table").on("click", "a", function(e){
                 e.preventDefault()

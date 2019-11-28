@@ -1,27 +1,27 @@
-import requests
 import json
 
-from django.shortcuts import render, get_object_or_404, redirect
-from django.core.urlresolvers import reverse
+import requests
 from django.contrib import messages
-from django.utils import timezone
-from django.http import Http404
-from django.template import loader
-from django.template import RequestContext
-from django.core import serializers
-from django.http import JsonResponse
 from django.contrib.messages import get_messages
+from django.core import serializers
+from django.core.urlresolvers import reverse
+from django.http import Http404, JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.template import RequestContext, loader
+from django.utils import timezone
 
-from submission import models, forms, logic
-from core import models as core_models, files
-from plugins.back_content import forms as bc_forms, logic as bc_logic, plugin_settings
-from production import logic as prod_logic
-from identifiers import logic as id_logic
-from security.decorators import editor_user_required
-from utils import shared
-from journal import logic as journal_logic
+from core import files
+from core import models as core_models
 from events import logic as event_logic
-from utils import views
+from identifiers import logic as id_logic
+from journal import logic as journal_logic
+from plugins.back_content import forms as bc_forms
+from plugins.back_content import logic as bc_logic
+from plugins.back_content import plugin_settings
+from production import logic as prod_logic
+from security.decorators import editor_user_required
+from submission import forms, logic, models
+from utils import shared, views
 
 
 @editor_user_required
@@ -297,7 +297,7 @@ def handleSaveForm(request, article):
     article_form = forms.ArticleInfo(request.POST, instance=article)
 
     if article_form.is_valid():
-        article_form.save()
+        article_form.save(request=request)
 
     correspondence_author = request.POST.get('main-author', None)
 
