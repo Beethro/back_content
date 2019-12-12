@@ -1,0 +1,149 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-12-12 12:57+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+#: src/plugins/back_content/templates/back_content/article.html:28
+#: src/plugins/back_content/templates/back_content/submission.html:27
+msgid "Title"
+msgstr "Titel"
+
+#: src/plugins/back_content/templates/back_content/article.html:33
+#: src/plugins/back_content/templates/back_content/submission.html:32
+msgid "Subtitle"
+msgstr "Subtitel"
+
+#: src/plugins/back_content/templates/back_content/article.html:39
+#: src/plugins/back_content/templates/back_content/submission.html:48
+msgid "Abstract"
+msgstr "Zusammenfassung"
+
+#: src/plugins/back_content/templates/back_content/article.html:44
+#: src/plugins/back_content/templates/back_content/submission.html:59
+msgid "Language"
+msgstr "Sprache"
+
+#: src/plugins/back_content/templates/back_content/article.html:49
+#: src/plugins/back_content/templates/back_content/submission.html:64
+msgid "Section"
+msgstr "Abschnitt"
+
+#: src/plugins/back_content/templates/back_content/article.html:55
+#: src/plugins/back_content/templates/back_content/submission.html:70
+msgid "License"
+msgstr "Lizenz"
+
+#: src/plugins/back_content/templates/back_content/article.html:70
+msgid "Save Section 1"
+msgstr "Abschnitt 1 speichern"
+
+#: src/plugins/back_content/templates/back_content/article.html:80
+#: src/plugins/back_content/templates/back_content/submission.html:94
+msgid ""
+"You can add an author by clicking the button below. This will open a popup "
+"modal for you to complete their details."
+msgstr ""
+"Durck Klick auf den Button unten können Sie eine_n Autor_in hinzufügen. Es öffnet sich ein "
+"Fenster, in dem Sie die Kontaktdaten ausfüllen können.."
+
+#: src/plugins/back_content/templates/back_content/article.html:81
+#: src/plugins/back_content/templates/back_content/submission.html:95
+msgid ""
+"If you know of an existing author, complete only the email field and they "
+"will be added as an author."
+msgstr ""
+"Wenn Sie eine Autor_in kennnen, reicht es die email-Adresse einzutragen."
+
+#: src/plugins/back_content/templates/back_content/article.html:82
+#: src/plugins/back_content/templates/back_content/author.html:8
+#: src/plugins/back_content/templates/back_content/submission.html:96
+#: src/plugins/back_content/templates/back_content/submission_author.html:8
+msgid "Add New Author"
+msgstr "Neue Autor_in"
+
+#: src/plugins/back_content/templates/back_content/article.html:86
+#: src/plugins/back_content/templates/back_content/submission.html:99
+msgid "Current Authors"
+msgstr "Derzeitige Autor_innen"
+
+#: src/plugins/back_content/templates/back_content/article.html:91
+#: src/plugins/back_content/templates/back_content/submission.html:104
+msgid "Name"
+msgstr "Name"
+
+#: src/plugins/back_content/templates/back_content/article.html:92
+#: src/plugins/back_content/templates/back_content/submission.html:105
+msgid "Email"
+msgstr "Email"
+
+#: src/plugins/back_content/templates/back_content/article.html:105
+#: src/plugins/back_content/templates/back_content/submission.html:118
+msgid "No authors yet, add one!"
+msgstr "Noch keine Autor_innen"
+
+#: src/plugins/back_content/templates/back_content/article.html:112
+msgid ""
+"You may select a main author who will receive the communications regarding "
+"your articles process through our systems. This does not have to be you."
+msgstr ""
+"Sie können eine_n Hauptautor_in auswählen. Diese_r enthält Informationen "
+"bzeüglich des Bearbeitungsfortschritts des Artikel. Sie müssen sich nicht selbst "
+"als Hauptautor_in wählen."
+
+#: src/plugins/back_content/templates/back_content/article.html:113
+#: src/plugins/back_content/templates/back_content/submission.html:124
+msgid "Select main author"
+msgstr "Hauptautor_in wählen"
+
+#: src/plugins/back_content/templates/back_content/article.html:123
+msgid "Save Section 2"
+msgstr "Abschnitt 2 speichern"
+
+#: src/plugins/back_content/templates/back_content/article.html:245
+msgid "Save Section 4"
+msgstr "Abschnitt 4 speichern"
+
+#: src/plugins/back_content/templates/back_content/article.html:266
+msgid "Save Section 5"
+msgstr "Abschnitt 5 speichern"
+
+#: src/plugins/back_content/templates/back_content/author.html:64
+#: src/plugins/back_content/templates/back_content/submission_author.html:64
+msgid "Add Author"
+msgstr "Neue Autor_in"
+
+#: src/plugins/back_content/templates/back_content/submission.html:37
+msgid "Title (de)"
+msgstr "Titel (de)"
+
+#: src/plugins/back_content/templates/back_content/submission.html:42
+msgid "Subtitle (de)"
+msgstr "Subtitel (de)"
+
+#: src/plugins/back_content/templates/back_content/submission.html:54
+msgid "Abstract (de)"
+msgstr "Zusammenfassung (de)"
+
+#: src/plugins/back_content/templates/back_content/submission.html:123
+msgid ""
+"You may select a main author, this author will receive the communications "
+"regarding your articles process through our systems. This does not have to "
+"be you."
+msgstr ""
+"Sie können eine_n Hauptautor_in auswählen. Diese_r enthält Informationen "
+"bzeüglich des Bearbeitungsfortschritts des Artikel. Sie müssen sich nicht selbst "
+"als Hauptautor_in wählen."
