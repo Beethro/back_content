@@ -54,7 +54,7 @@
                                 <td>
                                     <div class="btn-group">
                                         <a href="{% url 'bc_article' article.pk %}" class="btn btn-secondary">{% trans "View" %}</a>
-                                        <a href="{% url 'bc_delete_article' article.pk %}" class="btn btn-secondary">{% trans "Delete" %}</a>
+                                        <a href="{% url 'bc_delete_article' article.pk %}" class="btn btn-secondary confirm_delete">{% trans "Delete" %}</a>
                                     </div>
                                 </td>
                             </tr>
@@ -79,6 +79,11 @@
 
 {% block js %}
     {% include "elements/datatables.html" with target="#unassigned" %}
+    <script type="text/javascript">
+        $('.confirm_delete').on('click', function () {
+            return confirm('Are you sure?');
+        });
+    </script>    
 {% endblock %}
 
 {% block css %}
@@ -89,3 +94,4 @@
     }
 </style>
 {% endblock %}
+
