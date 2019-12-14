@@ -17,30 +17,31 @@
         <div class="row expanded">
             <div class="box">
                 <div class="title-area">
-                    <h2>New Article</h2>
+                    <h2>{% trans "New Article" %}</h2>
                 </div>
                 <div class="content">
-                    <p>To submit an article, click the start button below.</p>
+                    <p>{% trans "To submit an article, click the start button below" %}.</p>
                     <form method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
-                        <button type="submit" class="success button"><i class="fa fa-upload">&nbsp;</i>Start Submission
-                        </button>
-                        <a href="{% url 'bc_xml_import_upload' %}" class="success button"><i class="fa fa-upload">&nbsp;</i>Submit JATS XML for Import</a>
-                        <a href="{% url 'bc_doi_import' %}" class="success button"><i class="fa fa-upload">&nbsp;</i>Import Metadata from DOI or URL</a>
+                        <button type="submit" class="success button"><i class="fa fa-upload">&nbsp;</i>{% trans "Start Submission" %}</button>
+                        <a href="{% url 'bc_xml_import_upload' %}" class="success button"><i class="fa fa-upload">&nbsp;</i>
+                            {% trans "Submit JATS XML for Import" %}</a>
+                        <a href="{% url 'bc_doi_import' %}" class="success button"><i class="fa fa-upload">&nbsp;</i>
+                            {% trans "Import Metadata from DOI or URL" %}</a>
                     </form>
                 </div>
                 <div class="title-area">
-                    <h2>Existing Articles</h2>
+                    <h2>{% trans "Existing Articles" %}</h2>
                 </div>
                 <div class="content">
                     <table class="table table-bordered" id="unassigned">
                         <thead>
                         <tr>
-                            <th>Title</th>
-                            <th>Submitted</th>
-                            <th>Main Author</th>
-                            <th>Section</th>
-                            <th>Actions</th>
+                            <th>{% trans "Title" %}</th>
+                            <th>{% trans "Submitted" %}</th>
+                            <th>{% trans "Main Author" %}</th>
+                            <th>{% trans "Section" %}</th>
+                            <th>{% trans "Actions" %}</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -52,14 +53,14 @@
                                 <td>{{ article.section.name }}</td>
                                 <td>
                                     <div class="btn-group">
-                                        <a href="{% url 'bc_article' article.pk %}" class="btn btn-secondary">View</a>
-                                        <a href="{% url 'bc_delete_article' article.pk %}" class="btn btn-secondary">Delete</a>
+                                        <a href="{% url 'bc_article' article.pk %}" class="btn btn-secondary">{% trans "View" %}</a>
+                                        <a href="{% url 'bc_delete_article' article.pk %}" class="btn btn-secondary">{% trans "Delete" %}</a>
                                     </div>
                                 </td>
                             </tr>
                             {% empty %}
                             <tr>
-                                <td>No articles in this stage</td>
+                                <td>{% trans "No articles in this stage" %}</td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
