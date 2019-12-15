@@ -93,7 +93,13 @@
                         <div class="large-7 columns" data-equalizer-watch>
                             <p>{% trans "You can add an author by clicking the button below. This will open a popup modal for you to complete their details." %}</p>
                             <p>{% trans "If you know of an existing author, complete only the email field and they will be added as an author." %}</p>
-                            <a href="#" data-open="author" class="small success button">{% trans "Add New Author" %}</a>
+                            <a href="#" id="add_author_dialog" data-open="author" class="small success button">{% trans "Add New Author" %}</a>
+                            <hr/>
+                            <p>{% trans "Search for a user using email address or ORCiD. If a user is matched, they will be automatically added as an author. This search only returns exact matches." %}</p>
+                            <input form="other" id="add_author_searchvalue" class="form-control" name="author_search_text" style="width: 100%;" value=""
+                            placeholder="{% trans "Search by email address or ORCiD" %}.">
+                            <p></p>
+                            <a href="#" id="add_author" class="small success button">{% trans "Add New Author" %}</a>
                         </div>
                         <div class="large-5 columns" data-equalizer-watch>
                             <h4>{% trans "Current Authors" %}</h4>
@@ -288,11 +294,14 @@
 
 {% block js %}
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="{% static "common/css/toastr-2.1.1.css" %}">    
     <script type="text/javascript" src="{% static "common/js/jq-ui.min.js" %}"></script>
+    <script src="{% static "common/js/toastr-2.1.1.js" %}"></script>
     <script src="{% static "common/js/tagit.js" %}"></script>
 
-    <script type="text/javascript">
-        $(document).ready(function () {
+     <script type="text/javascript">
+        $(document).ready(function () 
+        {
             $("#id_keywords").tagit(
                 {allowSpaces: true});
 
@@ -308,13 +317,68 @@
                         removeAuthor(id)
                     }
                 })
-            });
+            })
+
+            $("#add_author").on("click", function(e) {
+                e.preventDefault()
+
+                var csrf_token = $("#uploadbox input[name='csrfmiddlewaretoken']").val()
+                var str=$("#add_author_searchvalue").val()
+
+                var formData = new FormData()
+                formData.append('csrfmiddlewaretoken', csrf_token)
+                formData.append('search', str)
+
+
+                $.ajax({              
+                    url: 'add_author/', 
+                    type: 'post',
+                    data: formData,
+                    contentType: false, 
+                    processData: false,                     
+                    success: function(response)
+                    {
+                        var message=response.message;
+                        var status=response.status;
+
+                        if (status == "success")
+                        {
+
+                            context = JSON.parse(response.context)
+                            if(context.author != undefined) 
+                            {
+                                var jsonAuthor = JSON.parse(context.author)[0]
+                                onAddAuthor(jsonAuthor.pk, jsonAuthor.fields, context.url)
+                            }
+                                                   
+                            toastr.success(message)
+                        }
+                        else if (status == "warning")
+                        {
+                            toastr.warning(message);
+                        }
+                        else if (status == "error")
+                        {
+                            toastr.error(message);
+                        }
+
+                    },
+                    failure: function(response){
+                        toastr.error("reuest failed");                        
+                    },
+                });
+            })
+
+
+
+
 
             $("#upload-table").on("click", "a", function(e) {
                 if(!confirm("This action will cause loss of all unsaved progress! Are you sure you want to continue?")) {
                     e.preventDefault()
                 }
             })
+
 
             $("#uploadbox").on("click", "button", function(e) {
                 e.preventDefault()

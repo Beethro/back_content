@@ -9,6 +9,7 @@ from django.http import Http404, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template import RequestContext, loader
 from django.utils import timezone
+from django.db.models import Q
 
 from core import files
 from core import models as core_models
@@ -137,6 +138,63 @@ def delete_author(request, article_id, author_id):
         pass
 
     return redirect(reverse('bc_article', kwargs={'article_id': article_id}))
+
+@editor_user_required
+def add_author(request,article_id):
+    str=request.POST.get("search","")
+    message="unknown"
+    status="info"
+
+    authors=core_models.Account.objects.filter(email=str) | core_models.Account.objects.filter(orcid=str)
+    if authors:
+        if authors.count()>1:
+            message="multiple authors found, something's very fishy"
+            status="error"
+        else:
+            
+            author=authors[0]
+            article=models.Article.objects.filter(id=article_id)[0]
+
+            #check if account already has author role for this journal
+            role=core_models.Role.objects.filter(name='author')[0]
+            accountroles=core_models.AccountRole.objects.filter(user=author,journal=request.journal,role=role)
+            if accountroles:
+                pass
+            else:
+                author.add_account_role(role_slug='author', journal=request.journal)
+                print ("author role added")
+
+            #check if author already added to article
+            found=False
+
+            for a in article.authors.all():
+                print (a.id)
+                if a.id==author.id:
+                    found=True
+
+            if not found:
+                article.authors.add(author)
+                message="author added"
+                status="success"
+                context = { 
+                    'url': reverse('bc_delete_author', kwargs={'article_id': article.pk, 'author_id': author.pk }), 
+                    'author': serializers.serialize('json', [author], fields=["first_name", "last_name", "email"]) 
+                }
+            else:
+                message="author already set"
+                status="warning"
+    else:
+        message="no author found for "+str
+        status="warning"
+
+    if status=="success": 
+        response = JsonResponse({'status': status,'message':message,
+                'context': json.dumps(context)})
+    else:
+        response= JsonResponse({'status': status,'message':message})
+
+
+    return response
 
 
 @editor_user_required

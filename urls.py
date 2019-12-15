@@ -9,6 +9,8 @@ urlpatterns = [
     url(r'^article/(?P<article_id>\d+)/$', views.article, name='bc_article'),
     url(r'^article/(?P<article_id>\d+)/delete/$', views.delete_article, name='bc_delete_article'),
     url(r'^article/(?P<article_id>\d+)/authors/(?P<author_id>\d+)/delete/$', views.delete_author, name='bc_delete_author'),
+    url(r'^article/(?P<article_id>\d+)/add_author/$', views.add_author, name='bc_add_author'),
+
     
     url(r'^xml_import/$', views.xml_import_upload, name='bc_xml_import_upload'),
     url(r'^xml_import/(?P<filename>[\w.-]{0,256})$', views.xml_import_parse, name='bc_xml_import_parse'),
