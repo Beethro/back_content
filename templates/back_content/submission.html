@@ -20,95 +20,95 @@
             <div class="large-12 columns box">
                 <form method="POST">
                     <div class="title-area">
-                        <h2>{% trans "1. Add A New Article" %}</h2>
+                        <h2>{% trans "1. Add A New Article" context "bc" %}</h2>
                     </div>
                     <div class="content">
                         <div class="large-6 columns">
-                            <label for="id_title">{% trans "Title" %}</label>
+                            <label for="id_title">{% trans "Title" context "bc" %}</label>
                             {{ article_form.title }}
                             {{ article_form.title.errors }}
                         </div>
                         <div class="large-6 columns">
-                            <label for="id_subtitle">{% trans "Subtitle" %}</label>
-                            {{ article_form.subtitle }}
-                            {{ article_form.subtitle.errors }}
-                        </div>
-                        <div class="large-6 columns">
-                            <label for="id_title_de">{% trans "Title (de)" %}</label>
+                            <label for="id_title_de">{% trans "Parallel title" context "bc" %}</label>
                             {{ article_form.title_de }}
                             {{ article_form.title_de.errors }}
                         </div>
                         <div class="large-6 columns">
-                            <label for="id_subtitle_de">{% trans "Subtitle (de)" %}</label>
+                            <label for="id_subtitle">{% trans "Subtitle" context "bc" %}</label>
+                            {{ article_form.subtitle }}
+                            {{ article_form.subtitle.errors }}
+                        </div>
+                        <div class="large-6 columns">
+                            <label for="id_subtitle_de">{% trans "Parallel subtitle" context "bc" %}</label>
                             {{ article_form.subtitle_de }}
                             {{ article_form.subtitle_de.errors }}
                         </div>
                         <div class="large-12 columns">
                             <label for="id_abstract">
-                                {% trans "Abstract" %}{% if form.abstract.field.required %}*{% endif %}</label>
+                                {% trans "Abstract" context "bc" %}{% if form.abstract.field.required %}*{% endif %}</label>
                             {{ article_form.abstract }}
                             {{ article_form.abstract.errors }}
                         </div>
                         <div class="large-12 columns">
                             <label for="id_abstract_de">
-                                {% trans "Abstract (de)" %}{% if form.abstract.field.required %}*{% endif %}</label>
+                                {% trans "Abstract (German)" context "bc" %}{% if form.abstract.field.required %}*{% endif %}</label>
                             {{ article_form.abstract_de }}
                             {{ article_form.abstract_de.errors }}
                         </div>
                         <div class="large-4 columns">
-                            <label for="id_language">{% trans "Language" %}</label>
+                            <label for="id_language">{% trans "Language" context "bc" %}</label>
                             {{ article_form.language }}
                             {{ article_form.language.errors }}
                         </div>
                         <div class="large-4 columns">
-                            <label for="id_section">{% trans "Section" %}</label>
+                            <label for="id_section">{% trans "Section" context "bc" %}</label>
                             {{ article_form.section }}
                             {{ article_form.section.errors }}
                         </div>
                         <div class="large-4 columns error">
                             <label for="id_license">{% if article_form.license.errors %}
-                                <span style="color: red;">{% endif %}{% trans "License" %}
+                                <span style="color: red;">{% endif %}{% trans "License" context "bc" %}
                                 {% if article_form.license.errors %}</span>{% endif %}
                                 {% if article_form.license.field.required %}*{% endif %}</label>
                             {{ article_form.license }}
                             {{ article_form.license.errors }}
                         </div>
                         <div class="large-12 columns">
-                            <label for="id_keywords">{% trans "Keywords" %}</label>
+                            <label for="id_keywords">{% trans "Keywords" context "bc" %}</label>
                             <input type="text" id="id_keywords" name="keywords" value="
                                     {% if article_form.cleaned_data.keywords %}{{ article_form.cleaned_data.keywords }}{% else %}{% for keyword in article.keywords.all %}{{ keyword.word }}{% if not forloop.last %},{% endif %}{% endfor %}{% endif %}"/>
-                                    {% trans "Hit Enter to add a new keyword." %}
+                                    {% trans "Hit Enter to add a new keyword." context "bc" %}
                         </div>
                         <div class="large-12 columns">
-                            <label for="id_keywords_de">{% trans "Keywords (de)" %}</label>
+                            <label for="id_keywords_de">{% trans "Keywords (German)" context "bc" %}</label>
                             <input type="text" id="id_keywords_de" name="keywords_de" value="
                                     {% if article_form.cleaned_data.keywords_de %}{{ article_form.cleaned_data.keywords_de }}{% else %}{% for keyword_de in article.keywords_de.all %}{{ keyword_de.word }}{% if not forloop.last %},{% endif %}{% endfor %}{% endif %}"/>
-                                    {% trans "Hit Enter to add a new keyword." %}
+                                    {% trans "Hit Enter to add a new keyword." context "bc" %}
                         </div>
                     </div>
                     <div class="title-area">
-                        <h2>{% trans "2. Article Authors" %}</h2>
+                        <h2>{% trans "2. Article Authors" context "bc" %}</h2>
                     </div>
                     <div class="content" data-equalizer data-equalize-on="medium">
                         <div class="large-7 columns" data-equalizer-watch>
-                            <p>{% trans "You can add an author by clicking the button below. This will open a popup modal for you to complete their details." %}</p>
-                            <p>{% trans "If you know of an existing author, complete only the email field and they will be added as an author." %}</p>
-                            <a href="#" id="add_author_dialog" data-open="author" class="small success button">{% trans "Add New Author" %}</a>
+                            <p>{% trans "You can add an author by clicking the button below. This will open a popup modal for you to complete their details." context "bc" %}</p>
+                            <p>{% trans "If you know of an existing author, complete only the email field and they will be added as an author." context "bc" %}</p>
+                            <a href="#" id="add_author_dialog" data-open="author" class="small success button">{% trans "Add New Author" context "bc" %}</a>
                             <hr/>
-                            <p>{% trans "Search for a user using email address or ORCiD. If a user is matched, they will be automatically added as an author. This search only returns exact matches." %}</p>
+                            <p>{% trans "Search for a user using email address or ORCiD. If a user is matched, they will be automatically added as an author. This search only returns exact matches." context "bc" %}</p>
                             <input form="other" id="add_author_searchvalue" class="form-control" name="author_search_text" style="width: 100%;" value=""
-                            placeholder="{% trans "Search by email address or ORCiD" %}.">
+                            placeholder="{% trans "Search by email address or ORCiD" context "bc" %}.">
                             <p></p>
-                            <a href="#" id="add_author" class="small success button">{% trans "Add New Author" %}</a>
+                            <a href="#" id="add_author" class="small success button">{% trans "Add New Author" context "bc" %}</a>
                         </div>
                         <div class="large-5 columns" data-equalizer-watch>
-                            <h4>{% trans "Current Authors" %}</h4>
+                            <h4>{% trans "Current Authors" context "bc" %}</h4>
                             <div class="row">
                                 <div class="large-12 columns">
                                     <table id="author_table">
                                         <tr>
-                                            <th>{% trans "Name" %}</th>
-                                            <th>{% trans "Email" %}</th>
+                                            <th>{% trans "Name" context "bc" %}</th>
+                                            <th>{% trans "Email" context "bc" %}</th>
                                             <th></th>
                                         </tr>
                                         {% for author in article.authors.all %}
@@ -121,13 +121,13 @@
                                             </tr>
                                             {% empty %}
                                             <tr>
-                                                <td colspan="3">{% trans "No authors yet, add one!" %}</td>
+                                                <td colspan="3">{% trans "No authors yet, add one!" context "bc" %}</td>
                                             </tr>
                                         {% endfor %}
                                     </table>
                                     <hr/>
-                                    <p>{% trans "You may select a main author, this author will receive the communications regarding your articles process through our systems. This does not have to be you." %}</p>
-                                    <label for="main-author">{% trans "Select main author" %}:</label>
+                                    <p>{% trans "You may select a main author, this author will receive the communications regarding your articles process through our systems. This does not have to be you." context "bc" %}</p>
+                                    <label for="main-author">{% trans "Select main author" context "bc" %}:</label>
                                     <select class="form-control" id="main-author" name="main-author">
                                         <option value="">---------</option>
                                         {% for author in article.authors.all %}
@@ -140,20 +140,20 @@
                         </div>
                     </div>      
                     <div class="title-area">
-                        <h2>{% trans "3. Galleys" %}</h2>
+                        <h2>{% trans "3. Galleys" context "bc" %}</h2>
                     </div>
                     <div class="content">
                         <table id="upload-table" class="table table-bordered table-condensed small">
                             <tr style="text-align: left">
-                                <th>{% trans "Label" %}</th>
-                                <th width="25%">{% trans "Filename" %}</th>
-                                <th>{% trans "Type" %}</th>
-                                <th>{% trans "Edit" %}</th>
-                                <th>{% trans "Download" %}</th>
-                                <th>{% trans "Replace" %}</th>
-                                <th>{% trans "History" %}</th>
-                                <th>{% trans "Create PDF" %}</th>
-                                <th>{% trans "Create EPUB" %}</th>
+                                <th>{% trans "Label" context "bc" %}</th>
+                                <th width="25%">{% trans "Filename" context "bc" %}</th>
+                                <th>{% trans "Type" context "bc" %}</th>
+                                <th>{% trans "Edit" context "bc" %}</th>
+                                <th>{% trans "Download" context "bc" %}</th>
+                                <th>{% trans "Replace" context "bc" %}</th>
+                                <th>{% trans "History" context "bc" %}</th>
+                                <th>{% trans "Create PDF" context "bc" %}</th>
+                                <th>{% trans "Create EPUB" context "bc" %}</th>
                             </tr>
                             {% for galley in galleys %}
                                 {% can_view_file galley.file as can_view_file_flag %}
@@ -216,15 +216,15 @@
                                 </tr>
                                 {% empty %}
                                 <tr>
-                                    <td colspan="9">{% trans "No galleys have been uploaded." %}</td>
+                                    <td colspan="9">{% trans "No galleys have been uploaded." context "bc" %}</td>
                                 </tr>
                             {% endfor %}
                         </table>
                         <a class="button success float-right" data-open="uploadbox"><i class="fa fa-cloud-upload">
-                            &nbsp;</i>{% trans "Upload a new galley" %}</a>
+                            &nbsp;</i>{% trans "Upload a new galley" context "bc" %}</a>
                     </div>
                     <div class="title-area">
-                        <h2>{% trans "4. Publication Info" %}</h2>
+                        <h2>{% trans "4. Publication Info" context "bc" %}</h2>
                     </div>
                     <div class="content">
                         <div class="large-4 columns">
@@ -248,15 +248,15 @@
                         </div>
                         <div class="large-12 columns">
                             {% if article and article.date_published %}
-                            <p>{% trans "More Pub Info is available on the" %}<a href="{% url 'publish_article' article.pk %}">{% trans "Pre Publication Checklist" %}</a>.</p>
+                            <p>{% trans "More Pub Info is available on the" context "bc" %}<a href="{% url 'publish_article' article.pk %}">{% trans "Pre Publication Checklist" context "bc" %}</a>.</p>
                             {% endif %}
                         </div>
                     </div>
                     <div class="title-area">
-                        <h2>{% trans "5. Remote" %}</h2>
+                        <h2>{% trans "5. Remote" context "bc" %}</h2>
                     </div>
                     <div class="content">
-                        <p>{% trans "If your article is remote, you can fill the required details here. If the remote article has a DOI, you should use it for full resolution." %}</p>
+                        <p>{% trans "If your article is remote, you can fill the required details here. If the remote article has a DOI, you should use it for full resolution." context "bc" %}</p>
                         <div class="row expanded">
                             <div class="large-6 columns">
                                 {{ remote_form.is_remote|foundation }}
@@ -267,10 +267,10 @@
                         </div>
                     </div>
                     <div class="title-area">
-                        <h2>{% trans "6. Publish" %}</h2>
+                        <h2>{% trans "6. Publish" context "bc" %}</h2>
                     </div>
                     <div class="content">
-                        <p>{% trans "When you are ready to publish your article, press the publish button and it will be published." %}</p>
+                        <p>{% trans "When you are ready to publish your article, press the publish button and it will be published." context "bc" %}</p>
                         <div class="large-12 columns">
                             {% csrf_token %}
                             <button class="success button pull-right" type="submit" name="publish">
