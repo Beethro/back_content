@@ -37,20 +37,28 @@
                     <table class="table table-bordered" id="unassigned">
                         <thead>
                         <tr>
+                            <th>{% trans "Id" context "bc" %}</th>
                             <th>{% trans "Title" context "bc" %}</th>
                             <th>{% trans "Submitted" context "bc" %}</th>
                             <th>{% trans "Main Author" context "bc" %}</th>
                             <th>{% trans "Section" context "bc" %}</th>
+                            <th>{% trans "Issue" context "bc" %}</th>
                             <th>{% trans "Actions" context "bc" %}</th>
                         </tr>
                         </thead>
                         <tbody>
                         {% for article in articles %}
                             <tr>
+                                <td>{{ article.id }}</td>
                                 <td>{{ article.title }}</td>
                                 <td>{{ article.date_submitted }}</td>
                                 <td>{{ article.correspondence_author.full_name }}</td>
                                 <td>{{ article.section.name }}</td>
+                                {% if article.primary_issue %}
+                                <td>{{ article.primary_issue.tuw_issue_count }}</td>    
+                                {% else %}
+                                <td></td>{{ </td>>
+                                {% endif %}
                                 <td>
                                     <div class="btn-group">
                                         <a href="{% url 'bc_article' article.pk %}" class="btn btn-secondary">{% trans "View" %}</a>
@@ -61,6 +69,8 @@
                             {% empty %}
                             <tr>
                                 <td>{% trans "No articles in this stage" context "bc" %}</td>
+                                <td></td>
+                                <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
