@@ -42,7 +42,14 @@
                             <th>{% trans "Submitted" context "bc" %}</th>
                             <th>{% trans "Main Author" context "bc" %}</th>
                             <th>{% trans "Section" context "bc" %}</th>
-                            <th>{% trans "Issue" context "bc" %}</th>
+                            <th>
+                            {% if request.journal.code == "JFM" or request.journal.code == "JFMT" %} 
+                                {% trans "Issue" context "bc" %}
+                            {% elif request.journal.code == "OES" or request.journal.code == "OEST" %}
+                                {% trans "Issue" context "bc-oes" %}
+                            {% else %}
+                            {% endif %}
+                            </th>                            
                             <th>{% trans "Actions" context "bc" %}</th>
                         </tr>
                         </thead>
@@ -57,7 +64,7 @@
                                 {% if article.primary_issue %}
                                 <td>{{ article.primary_issue.tuw_issue_count }}</td>    
                                 {% else %}
-                                <td></td>{{ </td>>
+                                <td></td>
                                 {% endif %}
                                 <td>
                                     <div class="btn-group">

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-17 12:28+0100\n"
+"POT-Creation-Date: 2019-12-24 08:50+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -139,41 +139,56 @@ msgid "Existing Articles"
 msgstr "Existierende Artikel"
 
 #: templates/back_content/new_article.html:40
+msgctxt "bc"
+msgid "Id"
+msgstr ""
+
+#: templates/back_content/new_article.html:41
 #: templates/back_content/submission.html:27
 msgctxt "bc"
 msgid "Title"
 msgstr "Titel"
 
-#: templates/back_content/new_article.html:41
+#: templates/back_content/new_article.html:42
 msgctxt "bc"
 msgid "Submitted"
 msgstr "Eingereicht"
 
-#: templates/back_content/new_article.html:42
+#: templates/back_content/new_article.html:43
 msgctxt "bc"
 msgid "Main Author"
 msgstr "Hauptautor_in"
 
-#: templates/back_content/new_article.html:43
+#: templates/back_content/new_article.html:44
 #: templates/back_content/submission.html:64
 msgctxt "bc"
 msgid "Section"
 msgstr "Abschnitt"
 
-#: templates/back_content/new_article.html:44
+#: templates/back_content/new_article.html:47
+msgctxt "bc"
+msgid "Issue"
+msgstr "Heft"
+
+#: templates/back_content/new_article.html:49
+msgctxt "bc-oes"
+msgid "Issue"
+msgstr "Ausgabe"
+
+#: templates/back_content/new_article.html:53
 msgctxt "bc"
 msgid "Actions"
 msgstr "Aktionen"
 
-#: templates/back_content/new_article.html:56
+#: templates/back_content/new_article.html:71
 msgid "View"
 msgstr "Bearbeiten"
 
-#: templates/back_content/new_article.html:57
+#: templates/back_content/new_article.html:72
 msgid "Delete"
 msgstr "Löschen"
 
-#: templates/back_content/new_article.html:63
+#: templates/back_content/new_article.html:78
 msgctxt "bc"
 msgid "No articles in this stage"
 msgstr "Keine Artikel in workflow-Stufe"

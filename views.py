@@ -67,7 +67,7 @@ def article(request, article_id):
         if 'publish' in request.POST:
             handleSaveForm(request, article)
             if not article.stage == models.STAGE_PUBLISHED:
-                id_logic.generate_crossref_doi_with_pattern(article)
+#                id_logic.generate_crossref_doi_with_pattern(article)
                 article.stage = models.STAGE_PUBLISHED
                 article.snapshot_authors(article)
                 article.save()
