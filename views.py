@@ -9,7 +9,7 @@ from django.http import Http404, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template import RequestContext, loader
 from django.utils import timezone
-from django.db.models import Q
+from django.db.models import Q,Max
 
 from core import files
 from core import models as core_models
@@ -174,6 +174,7 @@ def add_author(request,article_id):
 
             if not found:
                 article.authors.add(author)
+                setAuthorOrder(article,author)
                 message="author added"
                 status="success"
                 context = { 
@@ -196,6 +197,18 @@ def add_author(request,article_id):
 
     return response
 
+def setAuthorOrder(article,author):
+    aaos=models.ArticleAuthorOrder.objects.filter(article=article)
+    if aaos:
+        order=(aaos.aggregate(Max('order')))['order__max']
+        order+=1
+    else:
+        order=1
+    aao=models.ArticleAuthorOrder()
+    aao.article=article
+    aao.author=author
+    aao.order=order
+    aao.save()
 
 @editor_user_required
 def xml_import_upload(request):
@@ -286,6 +299,7 @@ def handleAddAuthor(request, article):
 
         if not author_on_article:
             article.authors.add(author_exists)
+            setAuthorOrder(article,author_exists)
             messages.add_message(request, messages.SUCCESS, '%s added to the article' % author_exists.full_name())
             context = { 
                 'url': reverse('bc_delete_author', kwargs={'article_id': article.pk, 'author_id': author_exists.pk }), 
@@ -301,10 +315,13 @@ def handleAddAuthor(request, article):
                 new_author.set_password(shared.generate_password())
                 new_author.save()
                 new_author.add_account_role(role_slug='author', journal=request.journal)
+
                 article.authors.add(new_author)
+                setAuthorOrder(article,new_author)
+
                 messages.add_message(request, messages.SUCCESS, '%s added to the article' % new_author.full_name())
                 context = { 
-                    'url': reverse('bc_delete_author', kwargs={'article_id': article.pk, 'author_id': author_exists.pk }), 
+                    'url': reverse('bc_delete_author', kwargs={'article_id': article.pk, 'author_id': new_author.pk }), 
             'author': serializers.serialize('json', [new_author], fields=["first_name", "last_name", "email"]) 
                 }
             else:
