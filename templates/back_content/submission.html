@@ -29,17 +29,17 @@
                             {{ article_form.title.errors }}
                         </div>
                         <div class="large-6 columns">
-                            <label for="id_title_de">{% trans "Parallel title" context "bc" %}</label>
-                            {{ article_form.title_de }}
-                            {{ article_form.title_de.errors }}
-                        </div>
-                        <div class="large-6 columns">
                             <label for="id_subtitle">{% trans "Subtitle" context "bc" %}</label>
                             {{ article_form.subtitle }}
                             {{ article_form.subtitle.errors }}
                         </div>
                         <div class="large-6 columns">
-                            <label for="id_subtitle_de">{% trans "Parallel subtitle" context "bc" %}</label>
+                            <label for="id_title_de">{% trans "Parallel title" context "bc" %}</label>
+                            {{ article_form.title_de }}
+                            {{ article_form.title_de.errors }}
+                        </div>
+                        <div class="large-6 columns">
+                            <label for="id_subtitle_de">{% trans "Subtitle of parallel title" context "bc" %}</label>
                             {{ article_form.subtitle_de }}
                             {{ article_form.subtitle_de.errors }}
                         </div>
@@ -248,7 +248,7 @@
                         </div>
                         <div class="large-12 columns">
                             {% if article and article.date_published %}
-                            <p>{% trans "More Pub Info is available on the" context "bc" %}<a href="{% url 'publish_article' article.pk %}">{% trans "Pre Publication Checklist" context "bc" %}</a>.</p>
+                            <p>{% trans "More Pub Info is available on the" context "bc" %} <a href="{% url 'publish_article' article.pk %}">{% trans "Pre Publication Checklist" context "bc" %}</a>.</p>
                             {% endif %}
                         </div>
                     </div>
@@ -274,13 +274,13 @@
                         <div class="large-12 columns">
                             {% csrf_token %}
                             <button class="success button pull-right" type="submit" name="publish">
-                                <i class="fa fa-check-circle">&nbsp;</i>Publish
+                                <i class="fa fa-check-circle">&nbsp;</i>{% trans "Publish" context "bc" %}
                             </button>
                             <button class="success button pull-right" type="submit" name="draft" formnovalidate>
-                                <i class="fa fa-check-circle">&nbsp;</i>Save as Draft
+                                <i class="fa fa-check-circle">&nbsp;</i>{% trans "Save as Draft" context "bc" %}
                             </button>
                             <button class="success button pull-right" type="submit" name="delete" formnovalidate>
-                                <i class="fa fa-check-circle">&nbsp;</i>Delete
+                                <i class="fa fa-check-circle">&nbsp;</i>{% trans "Delete" context "bc" %}
                             </button>
                         </div>
                     </div>

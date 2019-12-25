@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-24 08:50+0100\n"
+"POT-Creation-Date: 2019-12-25 07:58+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -86,8 +86,8 @@ msgid ""
 "You may select a main author who will receive the communications regarding "
 "your articles process through our systems. This does not have to be you."
 msgstr ""
-"Sie können eine_n Hauptautor_in auswählen. Diese_r enthält Informationen "
-"bzeüglich des Bearbeitungsfortschritts des Artikel. Sie müssen sich nicht "
+"Sie können eine_n Hauptautor_in auswählen. Diese_r enrhält Informationen "
+"bezüglich des Bearbeitungsfortschritts des Artikel. Sie müssen sich nicht "
 "selbst als Hauptautor_in wählen."
 
 #: templates/back_content/article.html:113
@@ -141,7 +141,7 @@ msgstr "Existierende Artikel"
 #: templates/back_content/new_article.html:40
 msgctxt "bc"
 msgid "Id"
-msgstr ""
+msgstr "Id"
 
 #: templates/back_content/new_article.html:41
 #: templates/back_content/submission.html:27
@@ -204,18 +204,18 @@ msgstr "1. Neuen Artikel hinzufügen"
 
 #: templates/back_content/submission.html:32
 msgctxt "bc"
-msgid "Parallel title"
-msgstr "Paralleltitel"
-
-#: templates/back_content/submission.html:37
-msgctxt "bc"
 msgid "Subtitle"
 msgstr "Subtitel"
 
+#: templates/back_content/submission.html:37
+msgctxt "bc"
+msgid "Parallel title"
+msgstr "Paralleltitel"
+
 #: templates/back_content/submission.html:42
 msgctxt "bc"
-msgid "Parallel subtitle"
-msgstr "Paralleler Subtitel"
+msgid "Subtitle of parallel title"
+msgstr "Subtitel des Paralleltitels"
 
 #: templates/back_content/submission.html:48
 msgctxt "bc"
@@ -289,11 +289,13 @@ msgid ""
 "will be automatically added as an author. This search only returns exact "
 "matches."
 msgstr ""
+"Such nach einem_r Autor_in mit Emailadresse oder ORCID. Gefundene Personen "
+"werden automatisch als Autor_innen gesetzt. Es werden nur exakte Treffer berücksichtigt."
 
 #: templates/back_content/submission.html:100
 msgctxt "bc"
 msgid "Search by email address or ORCiD"
-msgstr ""
+msgstr "Suche mit Emailadresse oder ORCID"
 
 #: templates/back_content/submission.html:105
 msgctxt "bc"
@@ -322,8 +324,8 @@ msgid ""
 "regarding your articles process through our systems. This does not have to "
 "be you."
 msgstr ""
-"Sie können eine_n Hauptautor_in auswählen. Diese_r enthält Informationen "
-"bzeüglich des Bearbeitungsfortschritts des Artikel. Sie müssen sich nicht "
+"Sie können eine_n Hauptautor_in auswählen. Diese_r erhält Informationen "
+"bezüglich des Bearbeitungsfortschritts des Artikel. Sie müssen sich nicht "
 "selbst als Hauptautor_in wählen."
 
 #: templates/back_content/submission.html:130
@@ -399,12 +401,12 @@ msgstr "4. Veröffentlichungsinfo"
 #: templates/back_content/submission.html:251
 msgctxt "bc"
 msgid "More Pub Info is available on the"
-msgstr "Weitere Veröffentlichungsinfo ist verfügbar unter"
+msgstr "Weitere Veröffentlichungsinfo ist verfügbar unter der"
 
 #: templates/back_content/submission.html:251
 msgctxt "bc"
 msgid "Pre Publication Checklist"
-msgstr "Vor-Veröffentlichungschecklist"
+msgstr "Veröffentlichungscheckliste"
 
 #: templates/back_content/submission.html:256
 msgctxt "bc"
@@ -432,6 +434,21 @@ msgid ""
 "When you are ready to publish your article, press the publish button and it "
 "will be published."
 msgstr "Mit Veröffentlichen den Artikel freischalten."
+
+#: templates/back_content/submission.html:277
+msgctxt "bc"
+msgid "Publish"
+msgstr "Veröffentlichen"
+
+#: templates/back_content/submission.html:280
+msgctxt "bc"
+msgid "Save as Draft"
+msgstr "Als Entwurf speichern"
+
+#: templates/back_content/submission.html:283
+msgctxt "bc"
+msgid "Delete"
+msgstr "Löschen"
 
 #: templates/back_content/submission_author.html:64
 msgctxt "bc"
