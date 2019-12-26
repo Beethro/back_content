@@ -162,13 +162,11 @@ def add_author(request,article_id):
                 pass
             else:
                 author.add_account_role(role_slug='author', journal=request.journal)
-                print ("author role added")
 
             #check if author already added to article
             found=False
 
             for a in article.authors.all():
-                print (a.id)
                 if a.id==author.id:
                     found=True
 
@@ -198,12 +196,7 @@ def add_author(request,article_id):
     return response
 
 def setAuthorOrder(article,author):
-    aaos=models.ArticleAuthorOrder.objects.filter(article=article)
-    if aaos:
-        order=(aaos.aggregate(Max('order')))['order__max']
-        order+=1
-    else:
-        order=1
+    order=article.next_author_sort() 
     aao=models.ArticleAuthorOrder()
     aao.article=article
     aao.author=author
