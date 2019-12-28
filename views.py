@@ -52,7 +52,7 @@ def article(request, article_id):
         default_configuration = request.journal.submissionconfiguration
         article.license = default_configuration.default_license
 
-    article_form = forms.ArticleInfo(instance=article,additional_fields=additional_fields)
+    article_form = forms.ArticleInfo(instance=article,journal=request.journal,additional_fields=additional_fields)
     author_form = bc_forms.BackContentAuthorForm()
     pub_form = bc_forms.PublicationInfo(instance=article)
     remote_form = bc_forms.RemoteArticle(instance=article)
