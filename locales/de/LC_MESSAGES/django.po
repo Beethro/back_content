@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-25 07:58+0100\n"
+"POT-Creation-Date: 2019-12-28 01:39+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -144,7 +144,7 @@ msgid "Id"
 msgstr "Id"
 
 #: templates/back_content/new_article.html:41
-#: templates/back_content/submission.html:27
+#: templates/back_content/submission.html:29
 msgctxt "bc"
 msgid "Title"
 msgstr "Titel"
@@ -160,7 +160,7 @@ msgid "Main Author"
 msgstr "Hauptautor_in"
 
 #: templates/back_content/new_article.html:44
-#: templates/back_content/submission.html:64
+#: templates/back_content/submission.html:66
 msgctxt "bc"
 msgid "Section"
 msgstr "Abschnitt"
@@ -193,72 +193,77 @@ msgctxt "bc"
 msgid "No articles in this stage"
 msgstr "Keine Artikel in workflow-Stufe"
 
-#: templates/back_content/submission.html:14
+#: templates/back_content/submission.html:16
 msgid "New Article"
 msgstr "Neuer Artikel"
 
-#: templates/back_content/submission.html:23
+#: templates/back_content/submission.html:25
 msgctxt "bc"
 msgid "1. Add A New Article"
 msgstr "1. Neuen Artikel hinzufügen"
 
-#: templates/back_content/submission.html:32
+#: templates/back_content/submission.html:34
 msgctxt "bc"
 msgid "Subtitle"
 msgstr "Subtitel"
 
-#: templates/back_content/submission.html:37
+#: templates/back_content/submission.html:39
 msgctxt "bc"
 msgid "Parallel title"
 msgstr "Paralleltitel"
 
-#: templates/back_content/submission.html:42
+#: templates/back_content/submission.html:44
 msgctxt "bc"
 msgid "Subtitle of parallel title"
 msgstr "Subtitel des Paralleltitels"
 
-#: templates/back_content/submission.html:48
+#: templates/back_content/submission.html:50
 msgctxt "bc"
 msgid "Abstract"
 msgstr "Zusammenfassung"
 
-#: templates/back_content/submission.html:54
+#: templates/back_content/submission.html:56
 msgctxt "bc"
 msgid "Abstract (German)"
 msgstr "Zusammenfassung (Deutsch)"
 
-#: templates/back_content/submission.html:59
+#: templates/back_content/submission.html:61
 msgctxt "bc"
 msgid "Language"
 msgstr "Sprache"
 
-#: templates/back_content/submission.html:70
+#: templates/back_content/submission.html:72
 msgctxt "bc"
 msgid "License"
 msgstr "Lizenz"
 
-#: templates/back_content/submission.html:77
+#: templates/back_content/submission.html:79
 msgctxt "bc"
 msgid "Keywords"
 msgstr "Schlagwörter"
 
-#: templates/back_content/submission.html:80
-#: templates/back_content/submission.html:86
+#: templates/back_content/submission.html:82
+#: templates/back_content/submission.html:88
 msgctxt "bc"
 msgid "Hit Enter to add a new keyword."
 msgstr "Drücken Sie die Eingabetaste um eine neues Schlagwort hinzuzufügen."
 
-#: templates/back_content/submission.html:83
+#: templates/back_content/submission.html:85
 msgctxt "bc"
 msgid "Keywords (German)"
 msgstr "Schlagwörter (Deutsch)"
 
-#: templates/back_content/submission.html:90
+#: templates/back_content/submission.html:96
+msgctxt "bc"
+msgid "1a. Additional Fields"
+msgstr "1a. Zusätzliche Felder"
+
+#: templates/back_content/submission.html:110
 msgctxt "bc"
 msgid "2. Article Authors"
 msgstr "2. Autor_innen"
 
-#: templates/back_content/submission.html:94
+#: templates/back_content/submission.html:114
 msgctxt "bc"
 msgid ""
 "You can add an author by clicking the button below. This will open a popup "
@@ -267,7 +272,7 @@ msgstr ""
 "Durck Klick auf den Button unten können Sie eine_n Autor_in hinzufügen. Es "
 "öffnet sich ein Fenster, in dem Sie die Kontaktdaten ausfüllen können.."
 
-#: templates/back_content/submission.html:95
+#: templates/back_content/submission.html:115
 msgctxt "bc"
 msgid ""
 "If you know of an existing author, complete only the email field and they "
@@ -275,14 +280,14 @@ msgid ""
 msgstr ""
 "Wenn Sie eine Autor_in kennnen, reicht es die email-Adresse einzutragen."
 
-#: templates/back_content/submission.html:96
-#: templates/back_content/submission.html:102
+#: templates/back_content/submission.html:116
+#: templates/back_content/submission.html:122
 #: templates/back_content/submission_author.html:8
 msgctxt "bc"
 msgid "Add New Author"
 msgstr "Neue Autor_in"
 
-#: templates/back_content/submission.html:98
+#: templates/back_content/submission.html:118
 msgctxt "bc"
 msgid ""
 "Search for a user using email address or ORCiD. If a user is matched, they "
@@ -290,34 +295,35 @@ msgid ""
 "matches."
 msgstr ""
 "Such nach einem_r Autor_in mit Emailadresse oder ORCID. Gefundene Personen "
-"werden automatisch als Autor_innen gesetzt. Es werden nur exakte Treffer berücksichtigt."
+"werden automatisch als Autor_innen gesetzt. Es werden nur exakte Treffer "
+"berücksichtigt."
 
-#: templates/back_content/submission.html:100
+#: templates/back_content/submission.html:120
 msgctxt "bc"
 msgid "Search by email address or ORCiD"
 msgstr "Suche mit Emailadresse oder ORCID"
 
-#: templates/back_content/submission.html:105
+#: templates/back_content/submission.html:125
 msgctxt "bc"
 msgid "Current Authors"
 msgstr "Derzeitige Autor_innen"
 
-#: templates/back_content/submission.html:110
+#: templates/back_content/submission.html:130
 msgctxt "bc"
 msgid "Name"
 msgstr "Name"
 
-#: templates/back_content/submission.html:111
+#: templates/back_content/submission.html:131
 msgctxt "bc"
 msgid "Email"
 msgstr "Email"
 
-#: templates/back_content/submission.html:124
+#: templates/back_content/submission.html:144
 msgctxt "bc"
 msgid "No authors yet, add one!"
 msgstr "Noch keine Autor_innen"
 
-#: templates/back_content/submission.html:129
+#: templates/back_content/submission.html:149
 msgctxt "bc"
 msgid ""
 "You may select a main author, this author will receive the communications "
@@ -328,92 +334,92 @@ msgstr ""
 "bezüglich des Bearbeitungsfortschritts des Artikel. Sie müssen sich nicht "
 "selbst als Hauptautor_in wählen."
 
-#: templates/back_content/submission.html:130
+#: templates/back_content/submission.html:150
 msgctxt "bc"
 msgid "Select main author"
 msgstr "Hauptautor_in wählen"
 
-#: templates/back_content/submission.html:143
+#: templates/back_content/submission.html:163
 msgctxt "bc"
 msgid "3. Galleys"
 msgstr "3. Galleys"
 
-#: templates/back_content/submission.html:148
+#: templates/back_content/submission.html:168
 msgctxt "bc"
 msgid "Label"
 msgstr "Dateityp"
 
-#: templates/back_content/submission.html:149
+#: templates/back_content/submission.html:169
 msgctxt "bc"
 msgid "Filename"
 msgstr "Dateiname"
 
-#: templates/back_content/submission.html:150
+#: templates/back_content/submission.html:170
 msgctxt "bc"
 msgid "Type"
 msgstr "Typ"
 
-#: templates/back_content/submission.html:151
+#: templates/back_content/submission.html:171
 msgctxt "bc"
 msgid "Edit"
 msgstr "Bearbeiten"
 
-#: templates/back_content/submission.html:152
+#: templates/back_content/submission.html:172
 msgctxt "bc"
 msgid "Download"
 msgstr "Download"
 
-#: templates/back_content/submission.html:153
+#: templates/back_content/submission.html:173
 msgctxt "bc"
 msgid "Replace"
 msgstr "Ersetzen"
 
-#: templates/back_content/submission.html:154
+#: templates/back_content/submission.html:174
 msgctxt "bc"
 msgid "History"
 msgstr "Versionen"
 
-#: templates/back_content/submission.html:155
+#: templates/back_content/submission.html:175
 msgctxt "bc"
 msgid "Create PDF"
 msgstr "PDF erstellen"
 
-#: templates/back_content/submission.html:156
+#: templates/back_content/submission.html:176
 msgctxt "bc"
 msgid "Create EPUB"
 msgstr "EPUB erstellen"
 
-#: templates/back_content/submission.html:219
+#: templates/back_content/submission.html:239
 msgctxt "bc"
 msgid "No galleys have been uploaded."
 msgstr "Keine galleys hochgeladen."
 
-#: templates/back_content/submission.html:224
+#: templates/back_content/submission.html:244
 msgctxt "bc"
 msgid "Upload a new galley"
 msgstr "Neue galley hochladen"
 
-#: templates/back_content/submission.html:227
+#: templates/back_content/submission.html:247
 msgctxt "bc"
 msgid "4. Publication Info"
 msgstr "4. Veröffentlichungsinfo"
 
-#: templates/back_content/submission.html:251
+#: templates/back_content/submission.html:271
 msgctxt "bc"
 msgid "More Pub Info is available on the"
 msgstr "Weitere Veröffentlichungsinfo ist verfügbar unter der"
 
-#: templates/back_content/submission.html:251
+#: templates/back_content/submission.html:271
 msgctxt "bc"
 msgid "Pre Publication Checklist"
 msgstr "Veröffentlichungscheckliste"
 
-#: templates/back_content/submission.html:256
+#: templates/back_content/submission.html:276
 msgctxt "bc"
 msgid "5. Remote"
 msgstr "5. Entfernter Artikel"
 
-#: templates/back_content/submission.html:259
+#: templates/back_content/submission.html:279
 msgctxt "bc"
 msgid ""
 "If your article is remote, you can fill the required details here. If the "
@@ -423,29 +429,29 @@ msgstr ""
 "eingegebn werden. Wenn der Artikel eine DOI hat, sollte sie für die "
 "Auflösung verwendet werden."
 
-#: templates/back_content/submission.html:270
+#: templates/back_content/submission.html:290
 msgctxt "bc"
 msgid "6. Publish"
 msgstr "6. Veröffentlichen"
 
-#: templates/back_content/submission.html:273
+#: templates/back_content/submission.html:293
 msgctxt "bc"
 msgid ""
 "When you are ready to publish your article, press the publish button and it "
 "will be published."
 msgstr "Mit Veröffentlichen den Artikel freischalten."
 
-#: templates/back_content/submission.html:277
+#: templates/back_content/submission.html:297
 msgctxt "bc"
 msgid "Publish"
 msgstr "Veröffentlichen"
 
-#: templates/back_content/submission.html:280
+#: templates/back_content/submission.html:300
 msgctxt "bc"
 msgid "Save as Draft"
 msgstr "Als Entwurf speichern"
 
-#: templates/back_content/submission.html:283
+#: templates/back_content/submission.html:303
 msgctxt "bc"
 msgid "Delete"
 msgstr "Löschen"

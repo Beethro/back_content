@@ -49,7 +49,6 @@ class BackContentAuthorForm(forms.ModelForm):
             'password',
             'username',
             'roles',
-
         )
 
         widgets = {

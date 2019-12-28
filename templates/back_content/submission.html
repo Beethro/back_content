@@ -4,6 +4,8 @@
 {% load securitytags %}
 {% load files %}
 {% load i18n %}
+{% load field %}
+
 
 {% block title %}Back Content Submission{% endblock %}
 
@@ -86,6 +88,24 @@
                                     {% trans "Hit Enter to add a new keyword." context "bc" %}
                         </div>
                     </div>
+
+                    <div class="clearfix"></div>
+                        
+                    {% if additional_fields %}
+                        <div class="title-area">
+                            <h2>{% trans "1a. Additional Fields" context "bc"%}</h2>
+                        </div>
+                        <div class="content">
+                        {% for additional_field in additional_fields %}
+                            {% get_form_field article_form additional_field.name as field %}
+                            <div class="{{ field.field.widget.attrs.div_class }} columns">
+                                {{ field|foundation }}
+                            </div>
+                        {% endfor %}
+                        </div>
+                    {% endif %}
+
+
                     <div class="title-area">
                         <h2>{% trans "2. Article Authors" context "bc" %}</h2>
                     </div>

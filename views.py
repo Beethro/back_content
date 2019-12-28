@@ -46,12 +46,13 @@ def index(request):
 @editor_user_required
 def article(request, article_id):
     article = get_object_or_404(models.Article, pk=article_id, journal=request.journal)
+    additional_fields = models.Field.objects.filter(journal=request.journal)
 
     if not article.license:
         default_configuration = request.journal.submissionconfiguration
         article.license = default_configuration.default_license
 
-    article_form = forms.ArticleInfo(instance=article)
+    article_form = forms.ArticleInfo(instance=article,additional_fields=additional_fields)
     author_form = bc_forms.BackContentAuthorForm()
     pub_form = bc_forms.PublicationInfo(instance=article)
     remote_form = bc_forms.RemoteArticle(instance=article)
@@ -98,7 +99,8 @@ def article(request, article_id):
         'pub_form': pub_form,
         'galleys': prod_logic.get_all_galleys(article),
         'remote_form': remote_form,
-        'modal': modal
+        'modal': modal,
+        'additional_fields': additional_fields,
     }
 
     return render(request, template, context)
